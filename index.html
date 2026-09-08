@@ -72,6 +72,10 @@
     .row{display:flex;align-items:center;gap:8px}
     .summary{display:flex;justify-content:space-between;align-items:center;gap:12px}
     .summary .r{text-align:right}
+    .sumHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+    .sumHead .nm{font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1.2;word-break:keep-all}
+    .sumHead .cs{color:var(--ink-3);font-size:13px;margin-top:1px}
+    .sumHead .cd{font-family:var(--mono);font-size:16px;letter-spacing:.18em;color:var(--accent);border:1.5px solid var(--accent-mid);padding:4px 10px;border-radius:9px;white-space:nowrap;flex:none}
 
     .cat{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer;min-height:48px;-webkit-tap-highlight-color:transparent}
     .cat:last-of-type{border-bottom:0}
@@ -208,9 +212,32 @@
     var bs = document.querySelectorAll('.seg button');
     for (var j = 0; j < bs.length; j++) bs[j].addEventListener('click', function () { setLang(this.getAttribute('data-lang')); });
     var inp = document.getElementById('codeInput');
-    inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') doLookup(); });
-    inp.addEventListener('input', function () { this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); });
-    document.getElementById('goBtn').addEventListener('click', doLookup);
+    inp.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) { cleanCode(); doLookup(); } });
+    // Korean IME → QWERTY: typing "CAMEL1" with 한글 on yields "참디1"; map jamo back to the keys pressed.
+    var J2K = { 'ㅂ':'q','ㅈ':'w','ㄷ':'e','ㄱ':'r','ㅅ':'t','ㅛ':'y','ㅕ':'u','ㅑ':'i','ㅐ':'o','ㅔ':'p','ㅁ':'a','ㄴ':'s','ㅇ':'d','ㄹ':'f','ㅎ':'g','ㅗ':'h','ㅓ':'j','ㅏ':'k','ㅣ':'l','ㅠ':'n','ㅜ':'b','ㅡ':'m','ㅊ':'c','ㅍ':'v','ㅌ':'x','ㅋ':'z',
+      'ㅃ':'q','ㅉ':'w','ㄸ':'e','ㄲ':'r','ㅆ':'t','ㅒ':'o','ㅖ':'p','ㅘ':'hk','ㅙ':'ho','ㅚ':'hl','ㅝ':'nj','ㅞ':'np','ㅟ':'nl','ㅢ':'ml',
+      'ㄳ':'rt','ㄵ':'sw','ㄶ':'sg','ㄺ':'fr','ㄻ':'fa','ㄼ':'fq','ㄽ':'ft','ㄾ':'fx','ㄿ':'fv','ㅀ':'fg','ㅄ':'qt' };
+    var CHO = 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ', JUNG = 'ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ', JONG = ' ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ';
+    function hangulToKeys(s) {
+      var out = '';
+      for (var i = 0; i < s.length; i++) {
+        var ch = s.charAt(i), cp = ch.charCodeAt(0);
+        if (cp >= 0xAC00 && cp <= 0xD7A3) {
+          var n = cp - 0xAC00, l = Math.floor(n / 588), v = Math.floor((n % 588) / 28), tt = n % 28;
+          out += (J2K[CHO.charAt(l)] || '') + (J2K[JUNG.charAt(v)] || '') + (tt ? (J2K[JONG.charAt(tt)] || '') : '');
+        } else if (J2K[ch]) out += J2K[ch];
+        else out += ch;
+      }
+      return out;
+    }
+    function cleanCode() {
+      var v = hangulToKeys(inp.value).toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (v !== inp.value) inp.value = v;
+    }
+    inp.addEventListener('input', function (e) { if (e.isComposing) return; cleanCode(); });
+    inp.addEventListener('compositionend', function () { setTimeout(cleanCode, 0); });
+    inp.addEventListener('blur', cleanCode);
+    document.getElementById('goBtn').addEventListener('click', function () { cleanCode(); doLookup(); });
     applyLang();
   })();
 
@@ -289,18 +316,19 @@
     var remainW = Math.max(0, 100 - releasedW);
 
     // ── header ──
-    h += '<div class="top">' + LOGO + '<div class="r2"><div class="meta">' + esc(data.courseName) + ' · <span class="code">' + esc(data.code || '') + '</span>';
-    if (data.lastUpdated) h += '<br>' + t('updated') + ' ' + esc(fmtDate(data.lastUpdated));
+    h += '<div class="top">' + LOGO + '<div class="r2"><div class="meta">';
+    if (data.lastUpdated) h += t('updated') + ' ' + esc(fmtDate(data.lastUpdated));
     h += '</div><span class="seg mini" role="group" aria-label="Language"><button type="button" class="' + (LANG === 'ko' ? 'on' : '') + '" onclick="setLang(\'ko\')">KO</button><button type="button" class="' + (LANG === 'en' ? 'on' : '') + '" onclick="setLang(\'en\')">EN</button></span></div></div>';
 
     // ── summary ──
-    h += '<div class="mc summary"><div><div class="eyebrow">' + t('total') + (tW > 0 && tW < 100 ? ' · ' + t('reflected') + ' ' + tW + '%' : '') + '</div>';
+    h += '<div class="mc"><div class="sumHead"><div><div class="nm">' + esc(data.studentName || '') + '</div><div class="cs">' + esc(data.courseName) + '</div></div><span class="cd">' + esc(data.code || '') + '</span></div>';
+    h += '<div class="summary"><div><div class="eyebrow">' + t('total') + (tW > 0 && tW < 100 ? ' · ' + t('reflected') + ' ' + tW + '%' : '') + '</div>';
     if (current !== null) h += '<div class="big num">' + current.toFixed(1) + '<span style="font-size:16px;color:var(--ink-3);font-weight:600"> / 100</span></div>';
     else h += '<div class="muted" style="margin-top:6px">' + t('notYet') + '</div>';
     h += '</div><div class="r">';
     if (current !== null) h += '<span class="lg">' + letter(current) + '</span>';
     if (data.classAvg !== null && data.classAvg !== undefined) h += '<div class="muted" style="margin-top:6px">' + t('classAvg') + ' <span class="num">' + Number(data.classAvg).toFixed(1) + '</span></div>';
-    h += '</div></div>';
+    h += '</div></div></div>';
 
     // ── categories (accordion) ──
     h += '<div class="mc" style="padding:2px 16px">';
