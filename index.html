@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eef0ff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Grade Portal">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e9eaff'/%3E%3Crect x='12' y='36' width='9' height='18' rx='3' fill='%233840f3'/%3E%3Crect x='27.5' y='24' width='9' height='30' rx='3' fill='%233840f3'/%3E%3Crect x='43' y='10' width='9' height='44' rx='3' fill='%233840f3'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23e9eaff'/%3E%3Crect x='12' y='36' width='9' height='18' rx='3' fill='%233840f3'/%3E%3Crect x='27.5' y='24' width='9' height='30' rx='3' fill='%233840f3'/%3E%3Crect x='43' y='10' width='9' height='44' rx='3' fill='%233840f3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700&family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+  <style>
+    :root{
+      --accent:#3840f3; --accent-soft:#e9eaff; --accent-mid:#aeb2ff;
+      --pt:#c8f53a; --pt-ink:#1a1a2e; --pt-soft:#f1fbc9;
+      --ink:#1a1a2e; --ink-2:#4b4b66; --ink-3:#8a8aa3;
+      --card:#ffffff; --line:#e3e3ee; --soft:#f5f5f9; --err:#d92d50;
+      --shadow:0 1px 2px rgba(26,26,46,.05),0 8px 24px rgba(56,64,243,.07);
+      --sans:"Plus Jakarta Sans","Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+      --logo:"Outfit","Plus Jakarta Sans",sans-serif;
+      --mono:"DM Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-text-size-adjust:100%}
+    body{min-height:100vh;background:linear-gradient(160deg,#eef0ff 0%,#f8f5ff 55%,#ffffff 100%) fixed;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;padding:24px 14px 48px}
+    .wrap{max-width:600px;margin:0 auto}
+    .hidden{display:none!important}
+    .num{font-variant-numeric:tabular-nums}
+    svg{display:block}
+    button{font-family:inherit}
+
+    /* ── logo ── */
+    .logo{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:inherit}
+    .logo .ic{width:28px;height:28px;border-radius:8px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
+    .logo .ic svg{width:16px;height:16px}
+    .logo b{font-family:var(--logo);font-weight:700;letter-spacing:.14em;font-size:14px}
+
+    /* ── code screen ── */
+    #screenCode{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 72px)}
+    .codeCard{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:32px 26px;width:100%;max-width:380px;text-align:center}
+    .codeCard .bigIc{width:52px;height:52px;border-radius:14px;background:var(--accent-soft);display:grid;place-items:center;margin:0 auto 12px}
+    .codeCard .bigIc svg{width:28px;height:28px}
+    .codeCard h1{font-family:var(--logo);font-weight:700;letter-spacing:.16em;font-size:17px}
+    .codeCard .sub{color:var(--ink-3);font-size:14.5px;margin:4px 0 16px}
+    .seg{display:inline-flex;gap:3px;background:var(--soft);padding:3px;border-radius:10px;margin-bottom:16px}
+    .seg button{border:0;background:transparent;color:var(--ink-3);font-weight:600;font-size:14.5px;padding:6px 14px;border-radius:8px;cursor:pointer;min-height:32px}
+    .seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+    .seg.mini{margin:0;padding:2px}
+    .seg.mini button{padding:4px 10px;min-height:28px;font-family:var(--mono);font-weight:500}
+    .top .r2{display:flex;align-items:center;gap:10px;margin-left:auto}
+    .codeInput{width:100%;font-family:var(--mono);font-size:23px;letter-spacing:.24em;text-transform:uppercase;text-align:center;padding:14px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);outline:none;min-height:52px}
+    .codeInput:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+    .codeInput::placeholder{letter-spacing:.1em;font-size:15px;color:var(--ink-3);font-family:var(--sans)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:48px;padding:12px 16px;border-radius:12px;background:var(--accent);color:#fff;font-weight:700;font-size:16px;border:0;cursor:pointer;margin-top:10px}
+    .btn:disabled{opacity:.6}
+    .btn:active{transform:scale(.98)}
+    .err{color:var(--err);font-size:14.5px;margin-top:12px}
+    .help{color:var(--ink-3);font-size:13px;margin-top:16px;line-height:1.6}
+    .spin{display:inline-block;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── dashboard ── */
+    .top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+    .meta{color:var(--ink-3);font-size:13px;text-align:right}
+    .meta .code{font-family:var(--mono)}
+    .mc{background:var(--card);border-radius:16px;padding:16px;box-shadow:var(--shadow);margin-bottom:10px}
+    .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+    .big{font-size:41.5px;font-weight:800;letter-spacing:-.03em;line-height:1}
+    .lg{display:inline-flex;align-items:center;font-family:var(--logo);font-weight:700;padding:5px 12px;border-radius:9px;background:var(--pt);color:var(--pt-ink);font-size:18.5px;letter-spacing:.02em}
+    .muted{color:var(--ink-3);font-size:13px}
+    .row{display:flex;align-items:center;gap:8px}
+    .summary{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .summary .r{text-align:right}
+
+    .cat{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer;min-height:48px;-webkit-tap-highlight-color:transparent}
+    .cat:last-of-type{border-bottom:0}
+    .cat.dim{opacity:.5;cursor:default}
+    .cat .l{display:flex;align-items:center;gap:8px;min-width:0}
+    .cat b{font-size:15.5px}
+    .cat .pfx{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+    .cat .sc{font-weight:800;font-size:18.5px;white-space:nowrap}
+    .cat .sc small{font-weight:500;color:var(--ink-3);font-size:12.5px}
+    .catIc{width:26px;height:26px;border-radius:8px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
+    .catIc svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .chev{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11.5px;color:var(--ink-3);background:var(--soft);flex:none;transition:transform .15s}
+    .cat.open .chev{background:var(--pt);color:var(--pt-ink);transform:rotate(90deg)}
+    .items{display:none;padding:2px 0 8px 34px;border-bottom:1px solid var(--line)}
+    .items.open{display:block}
+    .it{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;font-size:15px}
+    .it .nm{color:var(--ink-2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .it .v{font-weight:700;white-space:nowrap}
+    .it .v small{font-weight:500;color:var(--ink-3)}
+    .it .v.hi{background:var(--pt);color:var(--pt-ink);padding:1px 7px;border-radius:6px}
+    .it .v.hi small{color:inherit;opacity:.7}
+    .it.none .nm,.it.none .v{color:var(--ink-3);font-weight:500}
+
+    .chartHead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+    .legend{display:flex;gap:12px;font-size:12px;color:var(--ink-2)}
+    .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+    .chart svg{width:100%;height:auto}
+    .chart text{font-family:var(--sans)}
+
+    .fc{display:grid;grid-template-columns:1fr;gap:12px}
+    .fc .goal{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;margin-top:6px;font-size:14.5px}
+    .fc .lg.s{font-size:14px;padding:2px 8px}
+    .fc .lg.off{background:var(--soft);color:var(--ink-3)}
+    @media (min-width:480px){.fc{grid-template-columns:1fr 1fr}.fc>div+div{border-left:1px solid var(--line);padding-left:14px}}
+
+    .foot{color:var(--ink-3);font-size:12.5px;text-align:center;margin-top:18px;line-height:1.6}
+    .foot a{color:var(--accent);text-decoration:none;font-weight:600}
+    .scaleNote{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:8px;line-height:1.7}
+    @media (max-width:360px){.big{font-size:34.5px}.cat b{font-size:15px}}
+    @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ═══ CODE SCREEN ═══ -->
+  <div id="screenCode">
+    <div class="codeCard">
+      <div class="bigIc"><svg viewBox="0 0 16 16"><rect x="1" y="9" width="3" height="6" rx="1" fill="#3840f3"/><rect x="6.5" y="5" width="3" height="10" rx="1" fill="#3840f3"/><rect x="12" y="1" width="3" height="14" rx="1" fill="#3840f3"/></svg></div>
+      <h1>GRADE PORTAL</h1>
+      <p class="sub" data-t="sub"></p>
+      <div class="seg" role="group" aria-label="Language">
+        <button type="button" data-lang="ko">한국어</button>
+        <button type="button" data-lang="en">English</button>
+      </div>
+      <input class="codeInput" id="codeInput" type="text" maxlength="8" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      <button class="btn" id="goBtn" type="button"></button>
+      <div id="errorMsg" class="err hidden"></div>
+      <p class="help" data-t="help"></p>
+    </div>
+  </div>
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div id="screenDash" class="hidden"></div>
+</div>
+
+<script>
+  // ═══════════════════════════════════════
+  // I18N
+  // ═══════════════════════════════════════
+  var I18N = {
+    ko: {
+      sub: '접속 코드를 입력하십시오', go: '성적 확인', help: '코드는 이메일로 발송되었습니다.<br>분실 시 담당 교수에게 문의하십시오.',
+      errEmpty: '접속 코드를 입력하십시오.', errNotFound: '일치하는 코드가 없습니다. 코드를 확인한 후 다시 시도하십시오.', errGeneric: '오류가 발생했습니다. 잠시 후 다시 시도하십시오.', errRead: '성적을 읽는 중 오류가 발생했습니다. 담당 교수에게 문의하십시오.', errBusy: '시도가 너무 많습니다. 몇 분 후 다시 시도하십시오.',
+      updated: '업데이트', total: '현재 총점', reflected: '반영', classAvg: '반 평균', noScore: '미공개', notYet: '아직 점수가 없습니다',
+      dist: '점수 분포', students: '명', you: '나', progress: '진행 추이', me: '나', cls: '반 평균',
+      forecast: '이대로 가면', forecastNote: '아직 나오지 않은 항목을 지금까지의 평균으로 가정한 값입니다.', final: '최종 성적', finalNote: '모든 항목이 반영되었습니다.',
+      goal: '목표 학점까지', remainAvg: '남은 항목 평균 점수', atLeast: '% 이상', unreachable: '만점을 받아도 불가', topGrade: '최고 등급입니다',
+      other: '다른 코드 입력', footer: '점수는 강의 스프레드시트의 최신 데이터를 반영합니다.',
+      cats: { ATTP: '출석·참여', WA: '과제', GP: '조별 과제', MID: '중간고사', FE: '기말고사', ATT: '출석', ME: '중간고사', FP: '기말 프로젝트' }
+    },
+    en: {
+      sub: 'Enter your access code', go: 'View grades', help: 'Your code was sent by email.<br>If you lost it, contact the professor.',
+      errEmpty: 'Please enter an access code.', errNotFound: 'No matching record found. Check your access code and try again.', errGeneric: 'Something went wrong. Please try again.', errRead: 'Error reading grades. Please contact the professor.', errBusy: 'Too many attempts. Please try again in a few minutes.',
+      updated: 'Updated', total: 'Current total', reflected: 'graded', classAvg: 'Class avg', noScore: 'Not yet', notYet: 'No scores yet',
+      dist: 'Score distribution', students: ' students', you: 'You', progress: 'Progress', me: 'Me', cls: 'Class avg',
+      forecast: 'At this pace', forecastNote: 'Assumes your current average on everything not yet graded.', final: 'Final grade', finalNote: 'All components are in.',
+      goal: 'To reach', remainAvg: 'avg. on remaining work', atLeast: '% or higher', unreachable: 'Not reachable even with full marks', topGrade: 'Highest grade',
+      other: 'Enter another code', footer: 'Grades reflect the latest data from the course spreadsheet.',
+      cats: { ATTP: 'Attendance & Participation', WA: 'Assignments', GP: 'Group Project', MID: 'Midterm', FE: 'Final Exam', ATT: 'Attendance', ME: 'Midterm', FP: 'Final Project' }
+    }
+  };
+  var LANG = 'ko';
+  try { var saved = localStorage.getItem('gp-lang'); if (saved === 'en' || saved === 'ko') LANG = saved; else if ((navigator.language || '').toLowerCase().indexOf('ko') !== 0) LANG = 'en'; } catch (e) {}
+  function t(k) { return I18N[LANG][k]; }
+  function catName(prefix, fallback) { var p = String(prefix || '').toUpperCase(); return (I18N[LANG].cats[p]) || fallback || p; }
+
+  // KHU letter grade scale
+  var CUTS = [['A+',97],['A0',94],['A-',90],['B+',87],['B0',84],['B-',80],['C+',77],['C0',74],['C-',70],['D+',67],['D0',64],['D-',60]];
+  function letter(score) { for (var i = 0; i < CUTS.length; i++) if (score >= CUTS[i][1]) return CUTS[i][0]; return 'F'; }
+
+  var ICONS = {
+    ATTP: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m8 12 3 3 5-6"/></svg>',
+    ATT:  '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m8 12 3 3 5-6"/></svg>',
+    WA:   '<svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/></svg>',
+    GP:   '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5M15 15c3 0 5 1.5 5 4"/></svg>',
+    MID:  '<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7"/></svg>',
+    ME:   '<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7"/></svg>',
+    FE:   '<svg viewBox="0 0 24 24"><circle cx="12" cy="14" r="5"/><path d="M9 3l3 6 3-6"/></svg>',
+    FP:   '<svg viewBox="0 0 24 24"><circle cx="12" cy="14" r="5"/><path d="M9 3l3 6 3-6"/></svg>'
+  };
+  var LOGO = '<span class="logo"><span class="ic"><svg viewBox="0 0 16 16"><rect x="1" y="9" width="3" height="6" rx="1" fill="#3840f3"/><rect x="6.5" y="5" width="3" height="10" rx="1" fill="#3840f3"/><rect x="12" y="1" width="3" height="14" rx="1" fill="#3840f3"/></svg></span><b>GRADE PORTAL</b></span>';
+
+  // ═══════════════════════════════════════
+  // CODE SCREEN
+  // ═══════════════════════════════════════
+  var lastData = null;
+  function setLang(l) {
+    LANG = l;
+    try { localStorage.setItem('gp-lang', LANG); } catch (e) {}
+    applyLang();
+  }
+  function applyLang() {
+    document.documentElement.lang = LANG;
+    var els = document.querySelectorAll('[data-t]');
+    for (var i = 0; i < els.length; i++) els[i].innerHTML = t(els[i].getAttribute('data-t'));
+    document.getElementById('goBtn').textContent = t('go');
+    document.getElementById('codeInput').placeholder = LANG === 'ko' ? '접속 코드' : 'ACCESS CODE';
+    var bs = document.querySelectorAll('.seg button');
+    for (var j = 0; j < bs.length; j++) bs[j].classList.toggle('on', bs[j].getAttribute('data-lang') === LANG);
+    if (lastData) renderResults(lastData);
+  }
+  (function () {
+    var bs = document.querySelectorAll('.seg button');
+    for (var j = 0; j < bs.length; j++) bs[j].addEventListener('click', function () { setLang(this.getAttribute('data-lang')); });
+    var inp = document.getElementById('codeInput');
+    inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') doLookup(); });
+    inp.addEventListener('input', function () { this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); });
+    document.getElementById('goBtn').addEventListener('click', doLookup);
+    applyLang();
+  })();
+
+  function doLookup() {
+    var code = document.getElementById('codeInput').value.trim();
+    var errEl = document.getElementById('errorMsg');
+    var btn = document.getElementById('goBtn');
+    if (!code) { errEl.textContent = t('errEmpty'); errEl.classList.remove('hidden'); return; }
+    btn.disabled = true; btn.innerHTML = '<span class="spin">&#x27F3;</span>';
+    errEl.classList.add('hidden');
+    lookup(code, function (data) {
+      btn.disabled = false; btn.textContent = t('go');
+      if (data.error) {
+        var key = data.errorKey === 'notFound' ? 'errNotFound' : data.errorKey === 'empty' ? 'errEmpty' : data.errorKey === 'read' ? 'errRead' : data.errorKey === 'busy' ? 'errBusy' : null;
+        errEl.textContent = key ? t(key) : data.error; errEl.classList.remove('hidden'); return;
+      }
+      lastData = data;
+      renderResults(data);
+      document.getElementById('screenCode').classList.add('hidden');
+      document.getElementById('screenDash').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }, function () {
+      btn.disabled = false; btn.textContent = t('go');
+      errEl.textContent = t('errGeneric'); errEl.classList.remove('hidden');
+    });
+  }
+  // Transport: inside Apps Script use google.script.run; on GitHub Pages call the JSON API.
+  var API_URL = 'https://script.google.com/macros/s/AKfycbxnKiygqxu7fZFuEn8uoHOyj8UL-P5VdpJw4ZqJWD4cGrpkk2PGCNYwFj11efA2mds_HA/exec';
+  function lookup(code, ok, fail) {
+    if (window.google && google.script && google.script.run) {
+      google.script.run.withSuccessHandler(ok).withFailureHandler(fail).lookupStudent(code);
+      return;
+    }
+    fetch(API_URL + '?code=' + encodeURIComponent(code), { method: 'GET', redirect: 'follow' })
+      .then(function (r) { return r.json(); })
+      .then(ok)
+      .catch(function () { fail(); });
+  }
+  function showCode() {
+    lastData = null;
+    document.getElementById('screenDash').classList.add('hidden');
+    document.getElementById('screenCode').classList.remove('hidden');
+    document.getElementById('codeInput').value = '';
+    document.getElementById('codeInput').focus();
+  }
+
+  // ═══════════════════════════════════════
+  // DASHBOARD
+  // ═══════════════════════════════════════
+  function renderResults(data) {
+    var el = document.getElementById('screenDash');
+    var h = '';
+
+    // ── compute per-category stats ──
+    var cats = [];
+    var fixedPts = 0, releasedW = 0, wSum = 0, tW = 0;
+    for (var ci = 0; ci < data.grouped.length; ci++) {
+      var c = data.grouped[ci];
+      var earned = 0, maxRel = 0, maxAll = 0, any = false, best = -1, bestIdx = -1;
+      for (var j = 0; j < c.items.length; j++) {
+        var it = c.items[j];
+        maxAll += it.max;
+        if (it.score !== null && it.score !== '' && !isNaN(parseFloat(it.score))) {
+          var v = parseFloat(it.score);
+          earned += v; maxRel += it.max; any = true;
+          var r = it.max > 0 ? v / it.max : 0;
+          if (r > best) { best = r; bestIdx = j; }
+        }
+      }
+      var catPts = (any && maxRel > 0) ? (earned / maxRel) * c.weight : null; // weighted, as if category complete at current rate
+      if (any && maxRel > 0) { wSum += (earned / maxRel) * c.weight; tW += c.weight; }
+      if (maxAll > 0) { fixedPts += (earned / maxAll) * c.weight; releasedW += (maxRel / maxAll) * c.weight; }
+      cats.push({ c: c, earned: earned, maxRel: maxRel, maxAll: maxAll, any: any, bestIdx: (c.items.length > 1 ? bestIdx : -1), pts: catPts });
+    }
+    var current = tW > 0 ? (wSum / tW) * 100 : null; // normalized current grade (0-100)
+    var remainW = Math.max(0, 100 - releasedW);
+
+    // ── header ──
+    h += '<div class="top">' + LOGO + '<div class="r2"><div class="meta">' + esc(data.courseName) + ' · <span class="code">' + esc(data.code || '') + '</span>';
+    if (data.lastUpdated) h += '<br>' + t('updated') + ' ' + esc(fmtDate(data.lastUpdated));
+    h += '</div><span class="seg mini" role="group" aria-label="Language"><button type="button" class="' + (LANG === 'ko' ? 'on' : '') + '" onclick="setLang(\'ko\')">KO</button><button type="button" class="' + (LANG === 'en' ? 'on' : '') + '" onclick="setLang(\'en\')">EN</button></span></div></div>';
+
+    // ── summary ──
+    h += '<div class="mc summary"><div><div class="eyebrow">' + t('total') + (tW > 0 && tW < 100 ? ' · ' + t('reflected') + ' ' + tW + '%' : '') + '</div>';
+    if (current !== null) h += '<div class="big num">' + current.toFixed(1) + '<span style="font-size:16px;color:var(--ink-3);font-weight:600"> / 100</span></div>';
+    else h += '<div class="muted" style="margin-top:6px">' + t('notYet') + '</div>';
+    h += '</div><div class="r">';
+    if (current !== null) h += '<span class="lg">' + letter(current) + '</span>';
+    if (data.classAvg !== null && data.classAvg !== undefined) h += '<div class="muted" style="margin-top:6px">' + t('classAvg') + ' <span class="num">' + Number(data.classAvg).toFixed(1) + '</span></div>';
+    h += '</div></div>';
+
+    // ── categories (accordion) ──
+    h += '<div class="mc" style="padding:2px 16px">';
+    for (var k = 0; k < cats.length; k++) {
+      var s = cats[k], cc = s.c, pfx = String(cc.prefix).toUpperCase();
+      var hasItems = cc.items.length > 0;
+      var dim = !s.any;
+      h += '<div class="cat' + (dim ? ' dim' : '') + '" id="cat-' + k + '"' + (hasItems && !dim ? ' onclick="toggleCat(' + k + ')" role="button" tabindex="0" aria-expanded="false"' : '') + '>';
+      h += '<div class="l"><span class="catIc">' + (ICONS[pfx] || ICONS.WA) + '</span><b>' + esc(catName(pfx, cc.name)) + '</b><span class="pfx">' + esc(pfx) + ' · ' + cc.weight + '%</span></div>';
+      if (s.any) {
+        h += '<div class="row"><span class="sc num">' + fmt(s.earned) + '<small>/' + fmt(s.maxRel) + '</small></span>' + (hasItems ? '<span class="chev">&#9656;</span>' : '') + '</div>';
+      } else {
+        h += '<span class="muted">' + t('noScore') + '</span>';
+      }
+      h += '</div>';
+      if (hasItems && !dim) {
+        h += '<div class="items" id="items-' + k + '">';
+        for (var m = 0; m < cc.items.length; m++) {
+          var im = cc.items[m];
+          var has = im.score !== null && im.score !== '' && !isNaN(parseFloat(im.score));
+          h += '<div class="it' + (has ? '' : ' none') + '"><span class="nm">' + esc(itemName(im.name)) + '</span>';
+          if (has) h += '<span class="v num' + (m === s.bestIdx ? ' hi' : '') + '">' + fmt(parseFloat(im.score)) + '<small>/' + fmt(im.max) + '</small></span>';
+          else h += '<span class="v">&mdash;</span>';
+          h += '</div>';
+        }
+        h += '</div>';
+      }
+    }
+    h += '</div>';
+
+    // ── histogram ──
+    if (data.distribution && data.distribution.length >= 3 && current !== null) {
+      h += '<div class="mc chart"><div class="chartHead"><span class="eyebrow">' + t('dist') + ' · n = ' + data.distribution.length + '</span>';
+      if (data.classAvg !== null && data.classAvg !== undefined) h += '<span class="muted">' + t('classAvg') + ' <span class="num">' + Number(data.classAvg).toFixed(1) + '</span></span>';
+      h += '</div>' + buildHistogram(data.distribution, current) + '</div>';
+    }
+
+    // ── progress ──
+    if (data.progress && data.progress.length >= 2) {
+      h += '<div class="mc chart"><div class="chartHead"><span class="eyebrow">' + t('progress') + '</span><span class="legend"><span><i style="background:var(--accent)"></i>' + t('me') + '</span>';
+      if (data.progress[0].classGrade !== undefined) h += '<span><i style="background:var(--ink-3)"></i>' + t('cls') + '</span>';
+      h += '</span></div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch">' + buildProgress(data.progress) + '</div></div>';
+    }
+
+    // ── forecast ──
+    if (current !== null) {
+      h += '<div class="mc fc">';
+      if (remainW > 0.05) {
+        var proj = fixedPts + remainW * current / 100;
+        h += '<div><div class="eyebrow">' + t('forecast') + '</div><div class="row" style="gap:10px;margin-top:6px"><span class="big num" style="font-size:34px">' + proj.toFixed(1) + '</span><span class="lg">' + letter(proj) + '</span></div><div class="muted" style="margin-top:6px">' + t('forecastNote') + '</div></div>';
+        // goals: up to two grades above projected
+        var cur = letter(proj), idx = -1;
+        for (var q = 0; q < CUTS.length; q++) if (CUTS[q][0] === cur) idx = q;
+        var goals = [];
+        for (var g = (idx === -1 ? CUTS.length - 1 : idx - 1); g >= 0 && goals.length < 2; g--) goals.push(CUTS[g]);
+        if (goals.length) {
+          h += '<div><div class="eyebrow">' + t('goal') + '</div><div class="goal">';
+          for (var gi = 0; gi < goals.length; gi++) {
+            var need = (goals[gi][1] - fixedPts) / remainW * 100;
+            var ok = need <= 100.0001;
+            h += '<span class="lg s' + (ok ? '' : ' off') + '">' + goals[gi][0] + '</span><span class="muted">' + t('remainAvg') + '</span>';
+            h += ok ? '<b class="num">' + Math.max(0, Math.ceil(need)) + t('atLeast') + '</b>' : '<span class="muted">' + t('unreachable') + '</span>';
+          }
+          h += '</div></div>';
+        } else {
+          h += '<div><div class="eyebrow">' + t('goal') + '</div><div class="muted" style="margin-top:6px">' + t('topGrade') + '</div></div>';
+        }
+      } else {
+        h += '<div><div class="eyebrow">' + t('final') + '</div><div class="row" style="gap:10px;margin-top:6px"><span class="big num" style="font-size:34px">' + current.toFixed(1) + '</span><span class="lg">' + letter(current) + '</span></div><div class="muted" style="margin-top:6px">' + t('finalNote') + '</div></div>';
+      }
+      h += '</div>';
+      h += '<div class="scaleNote">A+ 97 · A0 94 · A- 90 · B+ 87 · B0 84 · B- 80 · C+ 77 · C0 74 · C- 70 · D+ 67 · D0 64 · D- 60</div>';
+    }
+
+    h += '<p class="foot">' + t('footer') + '<br><a href="#" onclick="showCode();return false;">' + t('other') + '</a></p>';
+    el.innerHTML = h;
+  }
+
+  function toggleCat(k) {
+    var items = document.getElementById('items-' + k), cat = document.getElementById('cat-' + k);
+    if (!items) return;
+    var open = items.classList.toggle('open');
+    cat.classList.toggle('open', open);
+    cat.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  document.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('cat')) { e.preventDefault(); e.target.click(); } });
+
+  // ═══════════════════════════════════════
+  // CHARTS (style A: rounded bars + KDE, lime "You")
+  // ═══════════════════════════════════════
+  function buildHistogram(grades, my) {
+    var W = 460, H = 170, pL = 30, pR = 14, pT = 26, pB = 26;
+    var cW = W - pL - pR, cH = H - pT - pB;
+    var dMin = Math.min.apply(null, grades), dMax = Math.max.apply(null, grades);
+    var rMin = Math.max(0, Math.floor(dMin / 10) * 10 - 5), rMax = Math.min(100, Math.ceil(dMax / 10) * 10 + 5);
+    if (rMax - rMin < 30) { rMin = Math.max(0, rMin - 10); rMax = Math.min(100, rMax + 10); }
+    var span = rMax - rMin;
+    var nB = Math.max(5, Math.min(14, Math.round(Math.sqrt(grades.length) * 1.5)));
+    var bins = []; for (var b = 0; b < nB; b++) bins.push(0);
+    for (var i = 0; i < grades.length; i++) { var idx = Math.floor((grades[i] - rMin) / (span / nB)); if (idx >= nB) idx = nB - 1; if (idx < 0) idx = 0; bins[idx]++; }
+    var maxBin = Math.max.apply(null, bins);
+    var bw = Math.max(span * 0.08, 3), kp = 80, kde = [], maxK = 0;
+    for (var k = 0; k <= kp; k++) { var x = rMin + span * k / kp, d = 0; for (var g = 0; g < grades.length; g++) { var z = (x - grades[g]) / bw; d += Math.exp(-0.5 * z * z); } kde.push({ x: x, d: d }); if (d > maxK) maxK = d; }
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
+    for (var gl = 1; gl <= 3; gl++) { var gy = pT + cH - cH * gl / 4; s += '<line x1="' + pL + '" y1="' + gy + '" x2="' + (W - pR) + '" y2="' + gy + '" stroke="#e3e3ee" stroke-dasharray="2 3"/>'; }
+    var slot = cW / nB, gap = 3;
+    for (var b2 = 0; b2 < nB; b2++) { if (!bins[b2]) continue; var bh = bins[b2] / maxBin * cH * 0.88; s += '<rect x="' + (pL + b2 * slot + gap / 2) + '" y="' + (pT + cH - bh) + '" width="' + (slot - gap) + '" height="' + bh + '" rx="3" fill="#aeb2ff"/>'; }
+    if (maxK > 0) { var pts = []; for (var k2 = 0; k2 <= kp; k2++) pts.push((pL + (kde[k2].x - rMin) / span * cW).toFixed(1) + ',' + (pT + cH - kde[k2].d / maxK * cH * 0.88).toFixed(1)); s += '<polyline points="' + pts.join(' ') + '" fill="none" stroke="#3840f3" stroke-width="2" stroke-linejoin="round"/>'; }
+    var mx = Math.max(pL + 4, Math.min(pL + cW - 4, pL + (my - rMin) / span * cW));
+    s += '<line x1="' + mx + '" y1="' + (pT - 4) + '" x2="' + mx + '" y2="' + (pT + cH) + '" stroke="#c8f53a" stroke-width="3"/>';
+    var lbl = t('you') + ' ' + my.toFixed(1), lw = lbl.length * 7.5 + 12, lx = mx + 5; if (lx + lw > W - pR) lx = mx - lw - 5;
+    s += '<rect x="' + lx + '" y="' + (pT - 13) + '" width="' + lw + '" height="18" rx="4" fill="#c8f53a"/><text x="' + (lx + 6) + '" y="' + (pT) + '" font-size="11.5" font-weight="700" fill="#1a1a2e">' + escSvg(lbl) + '</text>';
+    s += '<line x1="' + pL + '" y1="' + (pT + cH) + '" x2="' + (W - pR) + '" y2="' + (pT + cH) + '" stroke="#e3e3ee"/>';
+    for (var l = 0; l <= 5; l++) s += '<text x="' + (pL + cW * l / 5) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="11.5" fill="#8a8aa3">' + Math.round(rMin + span * l / 5) + '</text>';
+    s += '<text x="' + (pL - 6) + '" y="' + (pT + cH * 0.12 + 4) + '" text-anchor="end" font-size="10.5" fill="#8a8aa3">' + maxBin + '</text>';
+    return s + '</svg>';
+  }
+
+  function buildProgress(points) {
+    var n = points.length, pL = 30, pR = 16, pT = 18, pB = 26, W = Math.max(320, n * 48 + pL + pR), H = 150;
+    var cW = W - pL - pR, cH = H - pT - pB, mn = 100, mx = 0;
+    for (var i = 0; i < n; i++) { var g1 = points[i].grade, g2 = points[i].classGrade; if (g1 < mn) mn = g1; if (g1 > mx) mx = g1; if (g2 !== undefined && g2 !== null) { if (g2 < mn) mn = g2; if (g2 > mx) mx = g2; } }
+    var rMin = Math.max(0, Math.floor(mn / 10) * 10 - 5), rMax = Math.min(100, Math.ceil(mx / 10) * 10 + 5);
+    if (rMax - rMin < 20) { rMin = Math.max(0, rMin - 10); rMax = Math.min(100, rMax + 10); }
+    function X(i) { return pL + cW * i / Math.max(1, n - 1); }
+    function Y(v) { return pT + cH - cH * (v - rMin) / (rMax - rMin); }
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="' + (n > 7 ? 'min-width:' + Math.min(W, 560) + 'px' : '') + '">';
+    for (var gl = 0; gl <= 3; gl++) { var gv = rMin + (rMax - rMin) * gl / 3, gy = Y(gv); s += '<line x1="' + pL + '" y1="' + gy + '" x2="' + (W - pR) + '" y2="' + gy + '" stroke="#e3e3ee" stroke-dasharray="2 3"/><text x="' + (pL - 6) + '" y="' + (gy + 3) + '" text-anchor="end" font-size="10.5" fill="#8a8aa3">' + Math.round(gv) + '</text>'; }
+    if (points[0].classGrade !== undefined) { var cp = []; for (var c = 0; c < n; c++) if (points[c].classGrade !== null) cp.push(X(c).toFixed(1) + ',' + Y(points[c].classGrade).toFixed(1)); s += '<polyline points="' + cp.join(' ') + '" fill="none" stroke="#8a8aa3" stroke-width="1.4" stroke-dasharray="3 3"/>'; }
+    var pp = []; for (var p = 0; p < n; p++) pp.push(X(p).toFixed(1) + ',' + Y(points[p].grade).toFixed(1));
+    s += '<polyline points="' + pp.join(' ') + '" fill="none" stroke="#3840f3" stroke-width="2.2" stroke-linejoin="round"/>';
+    for (var d = 0; d < n; d++) {
+      var last = d === n - 1;
+      s += '<circle cx="' + X(d) + '" cy="' + Y(points[d].grade) + '" r="' + (last ? 5 : 3) + '" fill="' + (last ? '#c8f53a' : '#3840f3') + '" stroke="' + (last ? '#1a1a2e' : '#fff') + '" stroke-width="' + (last ? 1.5 : 1.5) + '"/>';
+      if (last) s += '<text x="' + X(d) + '" y="' + (Y(points[d].grade) - 10) + '" text-anchor="' + (d === n - 1 ? 'end' : 'middle') + '" font-size="11.5" font-weight="700" fill="#1a1a2e">' + points[d].grade.toFixed(1) + '</text>';
+      var lb = itemName(points[d].label); if (lb.length > 7) lb = lb.substring(0, 6) + '…';
+      s += '<text x="' + X(d) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="10.5" fill="#8a8aa3">' + escSvg(lb) + '</text>';
+    }
+    return s + '</svg>';
+  }
+
+  // ═══════════════════════════════════════
+  // UTIL
+  // ═══════════════════════════════════════
+  function fmt(v) { v = Number(v); return (Math.round(v * 10) / 10).toString(); }
+  function itemName(n) { // header may carry "English | 한국어"
+    var parts = String(n || '').split('|');
+    if (parts.length >= 2) return (LANG === 'ko' ? parts[1] : parts[0]).trim();
+    return String(n || '').trim();
+  }
+  function fmtDate(s) { // "yyyy-MM-dd HH:mm"
+    var m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})/);
+    if (!m) return s;
+    var d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
+    var dow = LANG === 'ko' ? ['일','월','화','수','목','금','토'][d.getDay()] : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+    if (LANG === 'ko') return m[2] + '.' + m[3] + ' (' + dow + ') ' + m[4] + ':' + m[5];
+    var mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+    return mon + ' ' + (+m[3]) + ' (' + dow + ') ' + m[4] + ':' + m[5];
+  }
+  function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+  function escSvg(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
+</body>
+</html>
