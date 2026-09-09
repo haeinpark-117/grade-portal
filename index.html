@@ -449,7 +449,7 @@
   }
 
   function buildProgress(points) {
-    var n = points.length, pL = 30, pR = 16, pT = 18, pB = 26, W = Math.max(320, n * 48 + pL + pR), H = 150;
+        var n = points.length, pL = 30, pR = 24, pT = 32, pB = 26, W = Math.max(320, n * 48 + pL + pR), H = 150;
     var cW = W - pL - pR, cH = H - pT - pB, mn = 100, mx = 0;
     for (var i = 0; i < n; i++) { var g1 = points[i].grade, g2 = points[i].classGrade; if (g1 < mn) mn = g1; if (g1 > mx) mx = g1; if (g2 !== undefined && g2 !== null) { if (g2 < mn) mn = g2; if (g2 > mx) mx = g2; } }
     var rMin = Math.max(0, Math.floor(mn / 10) * 10 - 5), rMax = Math.min(100, Math.ceil(mx / 10) * 10 + 5);
@@ -466,7 +466,7 @@
       s += '<circle cx="' + X(d) + '" cy="' + Y(points[d].grade) + '" r="' + (last ? 5 : 3) + '" fill="' + (last ? '#c8f53a' : '#3840f3') + '" stroke="' + (last ? '#1a1a2e' : '#fff') + '" stroke-width="' + (last ? 1.5 : 1.5) + '"/>';
       if (last) s += '<text x="' + X(d) + '" y="' + (Y(points[d].grade) - 10) + '" text-anchor="' + (d === n - 1 ? 'end' : 'middle') + '" font-size="11.5" font-weight="700" fill="#1a1a2e">' + points[d].grade.toFixed(1) + '</text>';
       var lb = itemName(points[d].label); if (lb.length > 7) lb = lb.substring(0, 6) + '…';
-      s += '<text x="' + X(d) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="10.5" fill="#8a8aa3">' + escSvg(lb) + '</text>';
+            s += '<text x="' + X(d) + '" y="' + (H - 8) + '" text-anchor="' + (n > 1 && d === 0 ? 'start' : (last ? 'end' : 'middle')) + '" font-size="10.5" fill="#8a8aa3">' + escSvg(lb) + '</text>';
     }
     return s + '</svg>';
   }
