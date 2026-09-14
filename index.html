@@ -297,20 +297,30 @@
     var fixedPts = 0, releasedW = 0, wSum = 0, tW = 0;
     for (var ci = 0; ci < data.grouped.length; ci++) {
       var c = data.grouped[ci];
-      var earned = 0, maxRel = 0, maxAll = 0, any = false, best = -1, bestIdx = -1;
+            var earned = 0, maxRel = 0, maxAll = 0, any = false, best = -1, bestIdx = -1, nGraded = 0;
       for (var j = 0; j < c.items.length; j++) {
         var it = c.items[j];
         maxAll += it.max;
         if (it.score !== null && it.score !== '' && !isNaN(parseFloat(it.score))) {
           var v = parseFloat(it.score);
           earned += v; maxRel += it.max; any = true;
+          if (it.max > 0) nGraded++;               // bonus items (max 0) do not count as an item
           var r = it.max > 0 ? v / it.max : 0;
           if (r > best) { best = r; bestIdx = j; }
         }
       }
       var catPts = (any && maxRel > 0) ? (earned / maxRel) * c.weight : null; // weighted, as if category complete at current rate
       if (any && maxRel > 0) { wSum += (earned / maxRel) * c.weight; tW += c.weight; }
-      if (maxAll > 0) { fixedPts += (earned / maxAll) * c.weight; releasedW += (maxRel / maxAll) * c.weight; }
+      // Share of this category that is already decided (for the forecast / goal calculation):
+      //  - expected item count known  → graded items / expected
+      //  - unknown (e.g. weekly work) → share of the semester elapsed
+      var frac = 0;
+      if (any && maxRel > 0) {
+        if (c.expected) frac = Math.min(1, nGraded / c.expected);
+        else if (typeof data.termFrac === 'number') frac = Math.max(0.05, data.termFrac);
+        else frac = 1;
+      }
+      fixedPts += (any && maxRel > 0 ? (earned / maxRel) : 0) * c.weight * frac; releasedW += c.weight * frac;
       cats.push({ c: c, earned: earned, maxRel: maxRel, maxAll: maxAll, any: any, bestIdx: (c.items.length > 1 ? bestIdx : -1), pts: catPts });
     }
     var current = tW > 0 ? (wSum / tW) * 100 : null; // normalized current grade (0-100)
