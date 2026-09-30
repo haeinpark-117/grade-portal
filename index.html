@@ -135,6 +135,7 @@
       <input class="codeInput" id="codeInput" type="text" maxlength="8" autocomplete="off" autocapitalize="characters" spellcheck="false">
       <button class="btn" id="goBtn" type="button"></button>
       <div id="errorMsg" class="err hidden"></div>
+      <div id="waitMsg" class="help hidden" style="margin-top:12px"></div>
       <p class="help" data-t="help"></p>
     </div>
   </div>
@@ -150,7 +151,7 @@
   var I18N = {
     ko: {
       sub: '접속 코드를 입력하십시오', go: '성적 확인', help: '코드는 이메일로 발송되었습니다.<br>분실 시 담당 교수에게 문의하십시오.',
-      errEmpty: '접속 코드를 입력하십시오.', errNotFound: '일치하는 코드가 없습니다. 코드를 확인한 후 다시 시도하십시오.', errGeneric: '오류가 발생했습니다. 잠시 후 다시 시도하십시오.', errRead: '성적을 읽는 중 오류가 발생했습니다. 담당 교수에게 문의하십시오.', errBusy: '시도가 너무 많습니다. 몇 분 후 다시 시도하십시오.',
+      errEmpty: '접속 코드를 입력하십시오.', errNotFound: '일치하는 코드가 없습니다. 코드를 확인한 후 다시 시도하십시오.', errGeneric: '오류가 발생했습니다. 잠시 후 다시 시도하십시오.', errRead: '성적을 읽는 중 오류가 발생했습니다. 담당 교수에게 문의하십시오.', errBusy: '시도가 너무 많습니다. 몇 분 후 다시 시도하십시오.', wait: '성적을 불러오는 중입니다. 잠시만 기다려 주십시오.',
       updated: '업데이트', total: '현재 총점', reflected: '반영', classAvg: '반 평균', noScore: '미공개', notYet: '아직 점수가 없습니다',
       dist: '점수 분포', students: '명', you: '나', progress: '진행 추이', me: '나', cls: '반 평균',
       forecast: '이대로 가면', forecastNote: '아직 나오지 않은 항목을 지금까지의 평균으로 가정한 값입니다.', final: '최종 성적', finalNote: '모든 항목이 반영되었습니다.',
@@ -160,7 +161,7 @@
     },
     en: {
       sub: 'Enter your access code', go: 'View grades', help: 'Your code was sent by email.<br>If you lost it, contact the professor.',
-      errEmpty: 'Please enter an access code.', errNotFound: 'No matching record found. Check your access code and try again.', errGeneric: 'Something went wrong. Please try again.', errRead: 'Error reading grades. Please contact the professor.', errBusy: 'Too many attempts. Please try again in a few minutes.',
+      errEmpty: 'Please enter an access code.', errNotFound: 'No matching record found. Check your access code and try again.', errGeneric: 'Something went wrong. Please try again.', errRead: 'Error reading grades. Please contact the professor.', errBusy: 'Too many attempts. Please try again in a few minutes.', wait: 'Loading your grades. This can take a few seconds.',
       updated: 'Updated', total: 'Current total', reflected: 'graded', classAvg: 'Class avg', noScore: 'Not yet', notYet: 'No scores yet',
       dist: 'Score distribution', students: ' students', you: 'You', progress: 'Progress', me: 'Me', cls: 'Class avg',
       forecast: 'At this pace', forecastNote: 'Assumes your current average on everything not yet graded.', final: 'Final grade', finalNote: 'All components are in.',
@@ -249,8 +250,11 @@
     if (!code) { errEl.textContent = t('errEmpty'); errEl.classList.remove('hidden'); return; }
     btn.disabled = true; btn.innerHTML = '<span class="spin">&#x27F3;</span>';
     errEl.classList.add('hidden');
+    var waitEl = document.getElementById('waitMsg');
+    var waitTimer = setTimeout(function () { waitEl.textContent = t('wait'); waitEl.classList.remove('hidden'); }, 3000);
+    function done() { clearTimeout(waitTimer); waitEl.classList.add('hidden'); btn.disabled = false; btn.textContent = t('go'); }
     lookup(code, function (data) {
-      btn.disabled = false; btn.textContent = t('go');
+      done();
       if (data.error) {
         var key = data.errorKey === 'notFound' ? 'errNotFound' : data.errorKey === 'empty' ? 'errEmpty' : data.errorKey === 'read' ? 'errRead' : data.errorKey === 'busy' ? 'errBusy' : null;
         errEl.textContent = key ? t(key) : data.error; errEl.classList.remove('hidden'); return;
@@ -261,7 +265,7 @@
       document.getElementById('screenDash').classList.remove('hidden');
       window.scrollTo(0, 0);
     }, function () {
-      btn.disabled = false; btn.textContent = t('go');
+      done();
       errEl.textContent = t('errGeneric'); errEl.classList.remove('hidden');
     });
   }
@@ -272,10 +276,24 @@
       google.script.run.withSuccessHandler(ok).withFailureHandler(fail).lookupStudent(code);
       return;
     }
-    fetch(API_URL + '?code=' + encodeURIComponent(code), { method: 'GET', redirect: 'follow' })
-      .then(function (r) { return r.json(); })
+    // Apps Script web apps sometimes stall or answer 404 on the redirect hop even though the
+    // script itself finished in <1 s. Give each try a time limit and retry once, silently.
+    function attempt(timeoutMs) {
+      var ctrl = window.AbortController ? new AbortController() : null;
+      var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, timeoutMs) : null;
+      return fetch(API_URL + '?code=' + encodeURIComponent(code) + '&t=' + Date.now(), { method: 'GET', redirect: 'follow', signal: ctrl ? ctrl.signal : undefined })
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .finally(function () { if (timer) clearTimeout(timer); });
+    }
+    attempt(12000)
+      .catch(function () { return attempt(25000); })
       .then(ok)
       .catch(function () { fail(); });
+  }
+  // Pre-warm: wake the Apps Script back end while the student is still typing (empty code is
+  // answered immediately with errorKey "empty" and does not count toward the miss limit).
+  if (!(window.google && google.script && google.script.run)) {
+    try { fetch(API_URL + '?code=', { method: 'GET', redirect: 'follow' }).catch(function () {}); } catch (e) {}
   }
   function showCode() {
     lastData = null;
