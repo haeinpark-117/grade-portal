@@ -285,7 +285,7 @@
         .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
         .finally(function () { if (timer) clearTimeout(timer); });
     }
-    attempt(12000)
+    attempt(20000)
       .catch(function () { return attempt(25000); })
       .then(ok)
       .catch(function () { fail(); });
