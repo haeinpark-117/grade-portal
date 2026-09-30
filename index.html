@@ -249,12 +249,19 @@
     var btn = document.getElementById('goBtn');
     if (!code) { errEl.textContent = t('errEmpty'); errEl.classList.remove('hidden'); return; }
     if (gpWin) {                       // fast path: the embedded Apps Script page does the lookup
-      try {
-        gpWin.postMessage({ gp: 'lookup', code: code, lang: LANG }, gpOrigin);
-        document.querySelector('.wrap').style.display = 'none';
-        gpFrame.style.visibility = 'visible';
+      try { gpWin.postMessage({ gp: 'lookup', code: code, lang: LANG }, gpOrigin); } catch (e) { gpWin = null; }
+      if (gpWin) {
+        btn.disabled = true; btn.innerHTML = '<span class="spin">&#x27F3;</span>';
+        errEl.classList.add('hidden');
+        var gWait = document.getElementById('waitMsg');
+        var gWaitT = setTimeout(function () { gWait.textContent = t('wait'); gWait.classList.remove('hidden'); }, 3000);
+        var gReset = function () { clearTimeout(gWaitT); clearTimeout(gGiveUp); gWait.classList.add('hidden'); btn.disabled = false; btn.textContent = t('go'); gpPending = null; };
+        // The frame answers "shown" once it has drawn the result (or its error). Only then swap.
+        gpPending = function () { gReset(); document.querySelector('.wrap').style.display = 'none'; gpFrame.style.visibility = 'visible'; };
+        // No answer in 15 s: forget the frame and use the normal path instead.
+        var gGiveUp = setTimeout(function () { if (!gpPending) return; gReset(); gpWin = null; doLookup(); }, 15000);
         return;
-      } catch (e) { gpWin = null; }    // fall through to the normal path
+      }
     }
     btn.disabled = true; btn.innerHTML = '<span class="spin">&#x27F3;</span>';
     errEl.classList.add('hidden');
@@ -265,16 +272,18 @@
       done();
       if (data.error) {
         var key = data.errorKey === 'notFound' ? 'errNotFound' : data.errorKey === 'empty' ? 'errEmpty' : data.errorKey === 'read' ? 'errRead' : data.errorKey === 'busy' ? 'errBusy' : null;
-        errEl.textContent = key ? t(key) : data.error; errEl.classList.remove('hidden'); return;
+        errEl.textContent = key ? t(key) : data.error; errEl.classList.remove('hidden'); tellTop('shown'); return;
       }
       lastData = data;
       renderResults(data);
       document.getElementById('screenCode').classList.add('hidden');
       document.getElementById('screenDash').classList.remove('hidden');
       window.scrollTo(0, 0);
+      tellTop('shown');
     }, function () {
       done();
       errEl.textContent = t('errGeneric'); errEl.classList.remove('hidden');
+      tellTop('shown');
     });
   }
   // Transport: inside Apps Script use google.script.run; on GitHub Pages call the JSON API.
@@ -309,12 +318,13 @@
   // redirect hop). If it never becomes ready (e.g. multi-account "unable to open"), nothing
   // changes and the normal fetch path above is used.
   var APP_ORIGIN = 'https://haeinpark-117.github.io';
-  var gpFrame = null, gpWin = null, gpOrigin = '*';
+  var gpFrame = null, gpWin = null, gpOrigin = '*', gpPending = null;
+  function tellTop(msg) { try { if (window.top !== window) window.top.postMessage({ gp: msg }, '*'); } catch (e) {} }
   if (!(window.google && google.script && google.script.run)) {
     window.addEventListener('message', function (e) {
-      if (!e.data || e.data.gp !== 'ready') return;
-      if (!/\.googleusercontent\.com$/.test(e.origin)) return;
-      gpWin = e.source; gpOrigin = e.origin;
+      if (!e.data || !/\.googleusercontent\.com$/.test(e.origin)) return;
+      if (e.data.gp === 'ready') { gpWin = e.source; gpOrigin = e.origin; }
+      else if (e.data.gp === 'shown' && e.source === gpWin && gpPending) gpPending();
     });
     try {
       gpFrame = document.createElement('iframe');
@@ -331,7 +341,7 @@
       document.getElementById('codeInput').value = String(e.data.code || '');
       doLookup();
     });
-    try { if (window.top !== window) window.top.postMessage({ gp: 'ready' }, '*'); } catch (e) {}
+    tellTop('ready');
   }
   function showCode() {
     lastData = null;
