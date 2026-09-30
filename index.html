@@ -248,6 +248,14 @@
     var errEl = document.getElementById('errorMsg');
     var btn = document.getElementById('goBtn');
     if (!code) { errEl.textContent = t('errEmpty'); errEl.classList.remove('hidden'); return; }
+    if (gpWin) {                       // fast path: the embedded Apps Script page does the lookup
+      try {
+        gpWin.postMessage({ gp: 'lookup', code: code, lang: LANG }, gpOrigin);
+        document.querySelector('.wrap').style.display = 'none';
+        gpFrame.style.visibility = 'visible';
+        return;
+      } catch (e) { gpWin = null; }    // fall through to the normal path
+    }
     btn.disabled = true; btn.innerHTML = '<span class="spin">&#x27F3;</span>';
     errEl.classList.add('hidden');
     var waitEl = document.getElementById('waitMsg');
@@ -294,6 +302,36 @@
   // answered immediately with errorKey "empty" and does not count toward the miss limit).
   if (!(window.google && google.script && google.script.run)) {
     try { fetch(API_URL + '?code=', { method: 'GET', redirect: 'follow' }).catch(function () {}); } catch (e) {}
+  }
+
+  // Fast path. On GitHub Pages, load the Apps Script version of this page in a hidden full-screen
+  // frame. Once it reports "ready", lookups are handed to it (google.script.run skips the slow
+  // redirect hop). If it never becomes ready (e.g. multi-account "unable to open"), nothing
+  // changes and the normal fetch path above is used.
+  var APP_ORIGIN = 'https://haeinpark-117.github.io';
+  var gpFrame = null, gpWin = null, gpOrigin = '*';
+  if (!(window.google && google.script && google.script.run)) {
+    window.addEventListener('message', function (e) {
+      if (!e.data || e.data.gp !== 'ready') return;
+      if (!/\.googleusercontent\.com$/.test(e.origin)) return;
+      gpWin = e.source; gpOrigin = e.origin;
+    });
+    try {
+      gpFrame = document.createElement('iframe');
+      gpFrame.src = API_URL;
+      gpFrame.title = 'Grade Portal';
+      gpFrame.setAttribute('style', 'position:fixed;top:0;left:0;width:100%;height:100%;border:0;visibility:hidden;z-index:10;background:transparent');
+      document.body.appendChild(gpFrame);
+    } catch (e) {}
+  } else {
+    // Inside Apps Script: tell the GitHub page we are ready, and accept lookups from it.
+    window.addEventListener('message', function (e) {
+      if (e.origin !== APP_ORIGIN || !e.data || e.data.gp !== 'lookup') return;
+      if ((e.data.lang === 'ko' || e.data.lang === 'en') && e.data.lang !== LANG) setLang(e.data.lang);
+      document.getElementById('codeInput').value = String(e.data.code || '');
+      doLookup();
+    });
+    try { if (window.top !== window) window.top.postMessage({ gp: 'ready' }, '*'); } catch (e) {}
   }
   function showCode() {
     lastData = null;
