@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Attendance">
+<title>Attendance</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #fff; }
+  #app { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; }
+  #wl { position: fixed; top: calc(6px + env(safe-area-inset-top)); right: 8px; z-index: 5;
+        font: 600 12px -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+        padding: 5px 10px; border-radius: 999px; border: 0; background: #1a1a2e; color: #fff; opacity: .85; }
+  #wl.on { background: #e9eaff; color: #3840f3; opacity: .7; }
+  #note { font: 16px -apple-system, system-ui, sans-serif; padding: 24px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<iframe id="app" allow="screen-wake-lock" title="Attendance"></iframe>
+<button id="wl" type="button">화면 켜두기</button>
+<script>
+  // Wrapper that keeps the screen awake while the attendance app is open.
+  // The Apps Script deployment id comes from the link (?id=...), so this public file
+  // contains no app address. The wake lock is requested by this top-level page, which
+  // is allowed to hold one (the Apps Script frame alone is not).
+  var id = new URLSearchParams(location.search).get('id') || location.hash.slice(1);
+  if (!/^AKfycb[A-Za-z0-9_-]{20,}$/.test(id || '')) {
+    document.body.innerHTML = '<p id="note">Open this page with the full attendance link (…/attendance.html?id=…).</p>';
+  } else {
+    document.getElementById('app').src = 'https://script.google.com/macros/s/' + id + '/exec';
+    var lock = null, btn = document.getElementById('wl');
+    var show = function () {
+      btn.className = lock ? 'on' : '';
+      btn.textContent = lock ? '화면 켜짐 ✓' : ('wakeLock' in navigator ? '화면 켜두기 (탭)' : '이 브라우저는 지원 안 함');
+    };
+    var keepAwake = function () {
+      if (lock || document.visibilityState !== 'visible' || !('wakeLock' in navigator)) { show(); return; }
+      navigator.wakeLock.request('screen').then(function (l) {
+        lock = l; show();
+        l.addEventListener('release', function () { lock = null; show(); });
+      }).catch(show);
+    };
+    btn.addEventListener('click', keepAwake);
+    document.addEventListener('visibilitychange', keepAwake);
+    window.addEventListener('focus', keepAwake);
+    setInterval(keepAwake, 15000);
+    keepAwake();
+  }
+</script>
+</body>
+</html>
