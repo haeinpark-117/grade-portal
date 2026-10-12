@@ -29,7 +29,10 @@
   if (!/^AKfycb[A-Za-z0-9_-]{20,}$/.test(id || '')) {
     document.body.innerHTML = '<p id="note">Open this page with the full attendance link (…/attendance.html?id=…).</p>';
   } else {
-    document.getElementById('app').src = 'https://script.google.com/macros/s/' + id + '/exec';
+    // khu.ac.kr path: the plain /macros/s/ address fails ("unable to open") when the browser is
+    // signed in to several Google accounts. Add &plain=1 to the link to use the plain address.
+    var base = new URLSearchParams(location.search).get('plain') ? 'https://script.google.com/macros/s/' : 'https://script.google.com/a/macros/khu.ac.kr/s/';
+    document.getElementById('app').src = base + id + '/exec';
     var lock = null, btn = document.getElementById('wl');
     var show = function () {
       btn.className = lock ? 'on' : '';
