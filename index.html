@@ -443,11 +443,6 @@
       h += '<div class="grade"><div class="lg">' + letter(current) + '</div><div class="eyebrow">' + t('curGrade') + '</div></div></div>';
       var chips = '';
       if (data.classAvg !== null && data.classAvg !== undefined) chips += '<div class="chip">' + t('classAvg') + '<b class="num">' + Number(data.classAvg).toFixed(1) + '</b></div>';
-      if (data.distribution && data.distribution.length >= 3) {
-        var above = 0; for (var di = 0; di < data.distribution.length; di++) if (data.distribution[di] > current + 1e-9) above++;
-        var topPct = Math.max(1, Math.ceil((above + 1) / data.distribution.length * 100));
-        chips += '<div class="chip g">' + t('top') + '<b class="num">' + topPct + '%</b></div>';
-      }
       if (chips) h += '<div class="chips">' + chips + '</div>';
     } else {
       h += '<div class="total"><div class="notYet">' + t('notYet') + '</div></div>';
