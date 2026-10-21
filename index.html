@@ -117,6 +117,44 @@
     .it .v.hi small{color:var(--ink)}
     .it.none .nm,.it.none .v{color:var(--ink-3);font-weight:500}
 
+    /* v10 interactive */
+    .rings{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 8px}
+    .ring{text-align:center;cursor:pointer;border-radius:16px;padding:8px 0 10px;transition:background .25s,transform .2s;-webkit-tap-highlight-color:transparent}
+    .ring svg{width:92px;max-width:100%;margin:0 auto;display:block;transition:transform .25s cubic-bezier(.22,1,.36,1)}
+    .ring .fg{transition:stroke-dashoffset 1.1s cubic-bezier(.22,1,.36,1),stroke .25s}
+    .ring .bgc{transition:stroke .25s}
+    .ring .rn{font:800 13.5px var(--grot);margin-top:2px}
+    .ring .rk{font:600 11.5px var(--sans);color:var(--ink-3)}
+    .ring .more{display:inline-block;margin-top:3px;font:700 11px var(--grot);color:var(--blue);opacity:.75;transition:opacity .2s}
+    .ring.dim{cursor:default}.ring.dim .more{visibility:hidden}
+    @media (hover:hover){.ring:not(.dim):hover{background:#f3f5ff}.ring:not(.dim):hover svg{transform:scale(1.06)}.ring:not(.dim):hover .fg{stroke:#22ff5e}.ring:not(.dim):hover .more{opacity:1}}
+    .ring:not(.dim):active{transform:scale(.97)}
+    .ring.sel,.ring.sel:hover{background:#111!important;color:#fff}.ring.sel svg{transform:none!important}.ring.sel .rk{color:#bbb}.ring.sel text{fill:#fff}.ring.sel .fg{stroke:#22ff5e}.ring.sel .bgc{stroke:#333}.ring.sel .more{color:#22ff5e;opacity:1}
+    .ringDetail{margin-top:10px;border-left:2px solid var(--blue);padding:2px 0 2px 12px}
+    .ringDetail .dh{font:800 14px var(--grot);margin-bottom:2px}
+    .big .cu{display:inline-block}
+    .lg.flip{animation:gpflip .6s cubic-bezier(.22,1,.36,1)}
+    @keyframes gpflip{0%{transform:rotateX(90deg);opacity:0}100%{transform:none;opacity:1}}
+    .dotplot,.prog2{position:relative;touch-action:pan-y;cursor:ew-resize}
+    .dotplot .d{transition:transform .7s cubic-bezier(.22,1,.36,1),opacity .4s}
+    .gtip{position:absolute;top:0;pointer-events:none;background:#111;color:#fff;border-radius:10px;padding:6px 10px;font:600 12px var(--sans);white-space:nowrap;transform:translate(-50%,-100%);opacity:0;transition:opacity .15s;z-index:2}
+    .gtip b{font:800 13px var(--grot)}.gtip .g{color:#22ff5e}
+    .gchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+    .gchips button{font:800 14px var(--grot);border:1.5px solid var(--ink);background:#fff;color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer;transition:background .2s,color .2s,transform .15s}
+    .gchips button:active{transform:scale(.95)}
+    .gchips button.on{background:var(--ink);color:#fff}
+    .need{margin-top:12px;border:2px solid var(--ink);border-radius:16px;padding:14px 16px}
+    .need .nh{font:600 12.5px var(--sans);color:var(--ink-2)}
+    .need .nn{font:900 40px/1.05 var(--grot);letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin-top:4px}
+    .need .nn small{font:600 15px var(--sans);color:var(--ink-3)}
+    .meter{height:12px;background:var(--soft);border-radius:6px;margin-top:10px;position:relative;overflow:hidden}
+    .meter i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:var(--blue);transition:width .6s cubic-bezier(.22,1,.36,1),background .3s}
+    .estb{display:inline-block;font:800 10.5px var(--grot);letter-spacing:.04em;background:#fff1a8;color:#6b5a00;border-radius:999px;padding:1px 8px;margin-left:4px;vertical-align:1px}
+    .rem{display:flex;gap:3px;height:14px;border-radius:7px;overflow:hidden;margin-top:6px}
+    .rem i{display:block;height:100%}
+    .remlg{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:6px;font:500 12px var(--sans);color:var(--ink-2)}
+    .remlg b{font:800 12px var(--grot);color:var(--ink)}
+    .remlg span i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:0}
     .legend{display:flex;gap:12px;font:500 12px var(--sans);color:var(--ink-2)}
     .legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:5px;vertical-align:3px}
     .chart svg{width:100%;height:auto}
@@ -130,7 +168,7 @@
     .fc .lg.s{font:800 13px var(--grot);color:var(--ink);border:1.5px solid var(--rule);border-radius:999px;padding:3px 10px;line-height:1.2;text-align:center}
     .fc .lg.off{border-color:var(--hair);color:var(--ink-3)}
     .fc .goal b{font:800 14px var(--grot)}
-    @media (min-width:480px){.fc{grid-template-columns:1fr 1fr}.fc>div+div{border-left:1px solid var(--hair);padding-left:16px}}
+
     .note{font:500 12.5px var(--sans);color:var(--ink-2);margin-top:8px;line-height:1.55}
 
     .foot{color:var(--ink-2);font-size:12.5px;text-align:center;margin-top:28px;line-height:1.7}
@@ -189,23 +227,35 @@
   // ═══════════════════════════════════════
   var I18N = {
     ko: {
-      sub: 'Intro to English Linguistics · 성적 확인', metaR: 'Grades', codeLabel: '접속 코드', top: '상위', hCats: '항목별 <em>점수</em>', hDist: '반 <em>분포</em>', hProg: '점수 <em>추이</em>', hFc: '이대로 <em>가면</em>', hGoal: '목표 <em>학점</em>', hFinal: '최종 <em>성적</em>', curGrade: '현재 등급', logout: '다른 코드', go: '성적 확인', help: '코드는 이메일로 발송되었습니다.<br>분실 시 담당 교수에게 문의하십시오.',
+      sub: 'Intro to English Linguistics · 성적 확인', metaR: 'Grades', codeLabel: '접속 코드', top: '상위', hCats: '항목별 <em>점수</em>', hDist: '반 <em>분포</em>', hProg: '점수 <em>추이</em>', hFc: '학기말 <em>예상 성적</em>', hGoal: '목표 <em>학점</em>', hFinal: '최종 <em>성적</em>', curGrade: '현재 등급', logout: '다른 코드', go: '성적 확인', help: '코드는 이메일로 발송되었습니다.<br>분실 시 담당 교수에게 문의하십시오.',
       errEmpty: '접속 코드를 입력하십시오.', errNotFound: '일치하는 코드가 없습니다. 코드를 확인한 후 다시 시도하십시오.', errGeneric: '오류가 발생했습니다. 잠시 후 다시 시도하십시오.', errRead: '성적을 읽는 중 오류가 발생했습니다. 담당 교수에게 문의하십시오.', errBusy: '시도가 너무 많습니다. 몇 분 후 다시 시도하십시오.', wait: '성적을 불러오는 중입니다. 잠시만 기다려 주십시오.',
       updated: '업데이트', total: '현재 총점', reflected: '반영', classAvg: '반 평균', noScore: '미공개', notYet: '아직 점수가 없습니다',
       dist: '점수 분포', students: '명', you: '나', progress: '진행 추이', me: '나', cls: '반 평균',
       forecast: '이대로 가면', forecastNote: '아직 나오지 않은 항목을 지금까지의 평균으로 가정한 값입니다.', final: '최종 성적', finalNote: '모든 항목이 반영되었습니다.',
       goal: '목표 학점까지', remainAvg: '남은 항목 평균 점수', atLeast: '% 이상', unreachable: '만점을 받아도 불가', topGrade: '최고 등급입니다',
       other: '다른 코드 입력', footer: '점수는 강의 스프레드시트의 최신 데이터를 반영합니다.',
+      est: '예측', details: '세부 보기 ›', noItems: '아직 점수가 없습니다', mix: '남은 비중 구성', today: '오늘', restTerm: '남은 학기', months: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+      needHead: function (g, c, r) { return g + ' (' + c + '점 이상) 받으려면 남은 약 ' + r + '%에서 평균'; },
+      needTxt: function (n) { return '남은 출석·과제·발표·기말에서 평균 약 ' + n + '%가 필요할 것으로 예측됩니다.'; },
+      needNo: '남은 부분을 모두 만점 받아도 닿지 않을 것으로 예측됩니다.', needDone: '이미 도달한 것으로 예측됩니다.',
+      estNote: '예측값입니다. 주간과제처럼 전체 개수가 정해지지 않은 항목은 학기 진행률만큼만 반영하고 나머지를 남은 비중으로 추정했습니다. 실제 과제 수와 점수에 따라 달라질 수 있습니다.',
+      attLeft: function (n) { return '남은 출석 ' + n + '회'; }, waLeft: '남은 주간과제', binN: function (a, b, n) { return a + '–' + b + ' · ' + n + '명'; },
       cats: { ATTP: '출석·참여', WA: '과제', GP: '조별 과제', MID: '중간고사', FE: '기말고사', ATT: '출석', ME: '중간고사', FP: '기말 프로젝트' }
     },
     en: {
-      sub: 'Intro to English Linguistics · Grades', metaR: 'Grades', codeLabel: 'Access code', top: 'Top', hCats: 'Score <em>breakdown</em>', hDist: 'Class <em>distribution</em>', hProg: 'Your <em>progress</em>', hFc: 'At this <em>pace</em>', hGoal: 'To <em>reach</em>', hFinal: 'Final <em>grade</em>', curGrade: 'Current grade', logout: 'Other code', go: 'View grades', help: 'Your code was sent by email.<br>If you lost it, contact the professor.',
+      sub: 'Intro to English Linguistics · Grades', metaR: 'Grades', codeLabel: 'Access code', top: 'Top', hCats: 'Score <em>breakdown</em>', hDist: 'Class <em>distribution</em>', hProg: 'Your <em>progress</em>', hFc: 'Projected <em>final grade</em>', hGoal: 'To <em>reach</em>', hFinal: 'Final <em>grade</em>', curGrade: 'Current grade', logout: 'Other code', go: 'View grades', help: 'Your code was sent by email.<br>If you lost it, contact the professor.',
       errEmpty: 'Please enter an access code.', errNotFound: 'No matching record found. Check your access code and try again.', errGeneric: 'Something went wrong. Please try again.', errRead: 'Error reading grades. Please contact the professor.', errBusy: 'Too many attempts. Please try again in a few minutes.', wait: 'Loading your grades. This can take a few seconds.',
       updated: 'Updated', total: 'Current total', reflected: 'graded', classAvg: 'Class avg', noScore: 'Not yet', notYet: 'No scores yet',
       dist: 'Score distribution', students: ' students', you: 'You', progress: 'Progress', me: 'Me', cls: 'Class avg',
       forecast: 'At this pace', forecastNote: 'Assumes your current average on everything not yet graded.', final: 'Final grade', finalNote: 'All components are in.',
       goal: 'To reach', remainAvg: 'avg. on remaining work', atLeast: '% or higher', unreachable: 'Not reachable even with full marks', topGrade: 'Highest grade',
       other: 'Enter another code', footer: 'Grades reflect the latest data from the course spreadsheet.',
+      est: 'Estimate', details: 'Details ›', noItems: 'No scores yet', mix: 'What is left', today: 'Today', restTerm: 'Rest of term', months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+      needHead: function (g, c, r) { return 'For ' + g + ' (' + c + '+), average on the remaining ~' + r + '%'; },
+      needTxt: function (n) { return 'You would need about ' + n + '% on average across the remaining attendance, assignments, presentation and final.'; },
+      needNo: 'Likely out of reach even with full marks on everything left.', needDone: 'Likely already reached.',
+      estNote: 'This is an estimate. For parts whose total count is not fixed (like weekly assignments), only the share of the semester that has passed is counted; the rest is treated as remaining. Actual results depend on the real number of assignments and your scores.',
+      attLeft: function (n) { return 'Attendance left (' + n + ')'; }, waLeft: 'Weekly work left', binN: function (a, b, n) { return a + '–' + b + ' · ' + n; },
       cats: { ATTP: 'Attendance & Participation', WA: 'Assignments', GP: 'Group Project', MID: 'Midterm', FE: 'Final Exam', ATT: 'Attendance', ME: 'Midterm', FP: 'Final Project' }
     }
   };
@@ -439,8 +489,8 @@
     h += '<div class="who"><div><div class="nm">' + esc(data.studentName || '') + '</div></div><div class="cd">CODE<b>' + esc(data.code || '') + '</b></div></div>';
     h += '<div class="rule"></div>';
     if (current !== null) {
-      h += '<div class="total"><div><div class="eyebrow" style="margin-bottom:10px">' + t('total') + (tW > 0 && tW < 100 ? ' · ' + t('reflected') + ' ' + tW + '%' : '') + '</div><div class="big num">' + current.toFixed(1) + '<small>/100</small></div></div>';
-      h += '<div class="grade"><div class="lg">' + letter(current) + '</div><div class="eyebrow">' + t('curGrade') + '</div></div></div>';
+      h += '<div class="total"><div><div class="eyebrow" style="margin-bottom:10px">' + t('total') + (tW > 0 && tW < 100 ? ' · ' + t('reflected') + ' ' + tW + '%' : '') + '</div><div class="big num"><span class="cu" id="gpTot" data-v="' + current.toFixed(1) + '">' + current.toFixed(1) + '</span><small>/100</small></div></div>';
+      h += '<div class="grade"><div class="lg" id="gpLg">' + letter(current) + '</div><div class="eyebrow">' + t('curGrade') + '</div></div></div>';
       var chips = '';
       if (data.classAvg !== null && data.classAvg !== undefined) chips += '<div class="chip">' + t('classAvg') + '<b class="num">' + Number(data.classAvg).toFixed(1) + '</b></div>';
       if (chips) h += '<div class="chips">' + chips + '</div>';
@@ -448,44 +498,32 @@
       h += '<div class="total"><div class="notYet">' + t('notYet') + '</div></div>';
     }
 
-    // ── categories (accordion) ──
-    h += '<div class="sec cats"><div class="secHead"><h3>' + t('hCats') + '</h3><span class="eyebrow">Weighted</span></div>';
+    // ── categories (rings) ──
+    window.__gpCats = cats;
+    h += '<div class="sec cats"><div class="secHead"><h3>' + t('hCats') + '</h3><span class="eyebrow">Weighted</span></div><div class="rings">';
+    var RC = 2 * Math.PI * 34;
     for (var k = 0; k < cats.length; k++) {
-      var s = cats[k], cc = s.c, pfx = String(cc.prefix).toUpperCase();
-      var hasItems = cc.items.length > 0;
-      var dim = !s.any;
-      var pct = (s.any && s.maxRel > 0) ? Math.max(0, Math.min(100, s.earned / s.maxRel * 100)) : 0;
-      h += '<div class="cat' + (dim ? ' dim' : '') + '" id="cat-' + k + '"' + (hasItems && !dim ? ' onclick="toggleCat(' + k + ')" role="button" tabindex="0" aria-expanded="false"' : '') + '>';
-      h += '<div class="r"><div class="n">' + esc(catName(pfx, cc.name)) + '<span class="pfx">' + esc(pfx) + ' ' + cc.weight + '%</span></div>';
-      if (s.any) h += '<div class="sc num">' + fmt(s.earned) + '<small>/' + fmt(s.maxRel) + '</small>' + (hasItems ? '<span class="chev">&#9656;</span>' : '') + '</div>';
-      else h += '<div class="sc">' + t('noScore') + '</div>';
-      h += '</div><div class="bar"><b style="width:' + pct.toFixed(1) + '%"></b></div></div>';
-      if (hasItems && !dim) {
-        h += '<div class="items" id="items-' + k + '">';
-        for (var m = 0; m < cc.items.length; m++) {
-          var im = cc.items[m];
-          var has = im.score !== null && im.score !== '' && !isNaN(parseFloat(im.score));
-          h += '<div class="it' + (has ? '' : ' none') + '"><span class="nm">' + esc(itemName(im.name)) + '</span>';
-          if (has) h += '<span class="v num">' + fmt(parseFloat(im.score)) + '<small>/' + fmt(im.max) + '</small></span>';
-          else h += '<span class="v">&mdash;</span>';
-          h += '</div>';
-        }
-        h += '</div>';
-      }
+      var s = cats[k], cc = s.c, pfx = String(cc.prefix).toUpperCase(), dim = !s.any;
+      var pct = (s.any && s.maxRel > 0) ? s.earned / s.maxRel * 100 : null;
+      h += '<div class="ring' + (dim ? ' dim' : '') + '" id="ring-' + k + '"' + (dim ? '' : ' onclick="pickRing(' + k + ')" role="button" tabindex="0"') + '>';
+      h += '<svg viewBox="0 0 92 92"><circle class="bgc" cx="46" cy="46" r="34" fill="none" stroke="#eef0ff" stroke-width="9"' + (dim ? ' stroke-dasharray="4 5"' : '') + '/>';
+      if (!dim) h += '<circle class="fg" cx="46" cy="46" r="34" fill="none" stroke="#2443ee" stroke-width="9" stroke-linecap="round" transform="rotate(-90 46 46)" stroke-dasharray="' + RC.toFixed(2) + '" stroke-dashoffset="' + RC.toFixed(2) + '" data-off="' + (RC * (1 - Math.max(0, Math.min(100, pct)) / 100)).toFixed(2) + '"/>';
+      h += '<text x="46" y="52" text-anchor="middle" style="font:900 18px Archivo,sans-serif" fill="#111">' + (dim ? '&mdash;' : Math.round(pct) + '%') + '</text></svg>';
+      h += '<div class="rn">' + esc(pfx) + '</div><div class="rk">' + esc(catName(pfx, cc.name)) + ' · ' + cc.weight + '%</div><span class="more">' + t('details') + '</span></div>';
     }
-    h += '</div>';
+    h += '</div><div id="ringDetail"></div></div>';
 
     // ── histogram ──
     if (data.distribution && data.distribution.length >= 3 && current !== null) {
       h += '<div class="sec chart"><div class="secHead"><h3>' + t('hDist') + '</h3><span class="eyebrow">n = ' + data.distribution.length + '</span></div>';
-      h += buildHistogram(data.distribution, current) + '</div>';
+      h += '<div class="dotplot" id="gpDots"><div class="gtip" id="gpDTip"></div>' + buildDots(data.distribution, current) + '</div></div>';
     }
 
     // ── progress ──
     if (data.progress && data.progress.length >= 2) {
       h += '<div class="sec chart"><div class="secHead"><h3>' + t('hProg') + '</h3><span class="legend"><span><i style="background:var(--blue)"></i>' + t('me') + '</span>';
       if (data.progress[0].classGrade !== undefined) h += '<span><i style="background:var(--ink-3)"></i>' + t('cls') + '</span>';
-      h += '</span></div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch">' + buildProgress(data.progress) + '</div></div>';
+      h += '</span></div><div class="prog2" id="gpProg"><div class="gtip" id="gpPTip"></div>' + buildProgress2(data.progress) + '</div></div>';
     }
 
     // ── forecast ──
@@ -494,24 +532,19 @@
       if (remainW > 0.05) {
         var proj = fixedPts + remainW * current / 100;
         h += '<div><div class="secHead" style="margin-bottom:0"><h3>' + t('hFc') + '</h3></div><div class="projRow"><span class="big num">' + proj.toFixed(1) + '</span><span class="lg">' + letter(proj) + '</span></div><div class="note">' + t('forecastNote') + '</div></div>';
-        // goals: up to two grades above projected
-        var cur = letter(proj), idx = -1;
-        for (var q = 0; q < CUTS.length; q++) if (CUTS[q][0] === cur) idx = q;
-        var goals = [];
-        for (var g = (idx === -1 ? CUTS.length - 1 : idx - 1); g >= 0 && goals.length < 2; g--) goals.push(CUTS[g]);
-        if (goals.length) {
-          h += '<div><div class="secHead" style="margin-bottom:0"><h3>' + t('hGoal') + '</h3></div><div class="goal">';
-          for (var gi = 0; gi < goals.length; gi++) {
-            var need = (goals[gi][1] - fixedPts) / remainW * 100;
-            var ok = need <= 100.0001;
-            h += '<span class="lg s' + (ok ? '' : ' off') + '">' + goals[gi][0] + '</span><span class="gtxt">';
-            h += ok ? '<span class="muted">' + t('remainAvg') + '</span> <b class="num">' + Math.max(0, Math.ceil(need)) + t('atLeast') + '</b>' : '<span class="muted">' + t('unreachable') + '</span>';
-            h += '</span>';
-          }
-          h += '</div></div>';
-        } else {
-          h += '<div><div class="secHead" style="margin-bottom:0"><h3>' + t('hGoal') + '</h3></div><div class="note">' + t('topGrade') + '</div></div>';
+        // goal chips (estimate): remaining share per category
+        var parts = [];
+        for (var pi = 0; pi < cats.length; pi++) {
+          var cs = cats[pi], cw = cs.c.weight, cp = String(cs.c.prefix).toUpperCase(), fr = 0, ng = 0;
+          for (var ii = 0; ii < cs.c.items.length; ii++) { var iv = cs.c.items[ii]; if (iv.max > 0 && iv.score !== null && iv.score !== '' && !isNaN(parseFloat(iv.score))) ng++; }
+          if (cs.any && cs.maxRel > 0) { if (cs.c.expected) fr = Math.min(1, ng / cs.c.expected); else if (typeof data.termFrac === 'number') fr = Math.max(0.05, data.termFrac); else fr = 1; }
+          var rw = cw * (1 - fr);
+          if (rw > 0.05) parts.push({ p: cp, w: rw, label: cp === 'ATTP' && cs.c.expected ? t('attLeft')(Math.max(0, cs.c.expected - ng)) : (cp === 'WA' && cs.any ? t('waLeft') : catName(cp, cs.c.name)) });
         }
+        window.__gpGoal = { fixed: fixedPts, remain: remainW, parts: parts, proj: proj };
+        h += '<div><div class="secHead" style="margin-bottom:0"><h3>' + t('hGoal') + '</h3></div><div class="gchips" id="gpChips"></div>';
+        h += '<div class="need"><div class="nh" id="gpNH"></div><div class="nn" id="gpNN"></div><div class="meter"><i id="gpNM"></i></div><div class="note" id="gpNT"></div>';
+        h += '<div class="eyebrow" style="margin-top:14px">' + t('mix') + '</div><div class="rem" id="gpRem"></div><div class="remlg" id="gpRemLg"></div><div class="note" style="color:var(--ink-3);font-size:11.5px">' + t('estNote') + '</div></div></div>';
       } else {
         h += '<div><div class="secHead" style="margin-bottom:0"><h3>' + t('hFinal') + '</h3></div><div class="projRow"><span class="big num">' + current.toFixed(1) + '</span><span class="lg">' + letter(current) + '</span></div><div class="note">' + t('finalNote') + '</div></div>';
       }
@@ -521,16 +554,159 @@
 
     h += '<p class="foot">' + t('footer') + '<br><a href="#" onclick="showCode();return false;">' + t('other') + '</a></p>';
     el.innerHTML = h;
+    setTimeout(initDash, 30);
   }
 
-  function toggleCat(k) {
-    var items = document.getElementById('items-' + k), cat = document.getElementById('cat-' + k);
-    if (!items) return;
-    var open = items.classList.toggle('open');
-    cat.classList.toggle('open', open);
-    cat.setAttribute('aria-expanded', open ? 'true' : 'false');
+  function pickRing(k) {
+    var cats = window.__gpCats || [], s = cats[k]; if (!s) return;
+    var rs = document.querySelectorAll('.ring'); for (var i = 0; i < rs.length; i++) rs[i].classList.toggle('sel', rs[i].id === 'ring-' + k);
+    var cc = s.c, pfx = String(cc.prefix).toUpperCase(), h = '<div class="ringDetail"><div class="dh">' + esc(catName(pfx, cc.name)) + ' · ' + fmt(s.earned) + '/' + fmt(s.maxRel) + '</div>';
+    if (!cc.items.length) h += '<div class="it none"><span class="nm">' + t('noItems') + '</span></div>';
+    for (var m = 0; m < cc.items.length; m++) {
+      var im = cc.items[m], has = im.score !== null && im.score !== '' && !isNaN(parseFloat(im.score));
+      h += '<div class="it' + (has ? '' : ' none') + '"><span class="nm">' + esc(itemName(im.name)) + '</span>' + (has ? (im.max > 0 ? '<span class="v num">' + fmt(parseFloat(im.score)) + '<small>/' + fmt(im.max) + '</small></span>' : '<span class="v num">+' + fmt(parseFloat(im.score)) + '</span>') : '<span class="v">&mdash;</span>') + '</div>';
+    }
+    document.getElementById('ringDetail').innerHTML = h + '</div>';
   }
-  document.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('cat')) { e.preventDefault(); e.target.click(); } });
+  document.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('ring')) { e.preventDefault(); e.target.click(); } });
+
+  var gpEase = function (p) { return 1 - Math.pow(1 - p, 3); };
+  function gpCount(el, to, dec, dur, cb) { var t0 = performance.now(); (function s(now) { var p = Math.min(1, (now - t0) / dur); el.textContent = (to * gpEase(p)).toFixed(dec); if (p < 1) requestAnimationFrame(s); else if (cb) cb(); })(t0); }
+  function onSeen(el, fn) { if (!el) return; if (!('IntersectionObserver' in window)) { fn(); return; } var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); fn(); } }, { threshold: .25 }); io.observe(el); }
+
+  function initDash() {
+    // ① total count-up + letter flip
+    var tot = document.getElementById('gpTot'), lg = document.getElementById('gpLg');
+    if (tot) { var v = parseFloat(tot.getAttribute('data-v')); tot.textContent = '0.0'; gpCount(tot, v, 1, 1100, function () { if (lg) { lg.classList.remove('flip'); void lg.offsetWidth; lg.classList.add('flip'); } }); }
+    // rings fill
+    var fgs = document.querySelectorAll('.ring .fg');
+    requestAnimationFrame(function () { requestAnimationFrame(function () { for (var i = 0; i < fgs.length; i++) (function (c, i) { setTimeout(function () { c.setAttribute('stroke-dashoffset', c.getAttribute('data-off')); }, 250 + i * 130); })(fgs[i], i); }); });
+    // ② dots rise when seen
+    var dp = document.getElementById('gpDots');
+    if (dp) {
+      onSeen(dp, function () { var ds = dp.querySelectorAll('.d'); for (var i = 0; i < ds.length; i++) { ds[i].style.opacity = ds[i].getAttribute('data-o'); ds[i].style.transform = ds[i].getAttribute('data-t'); } var me = dp.querySelector('.meg'); if (me) setTimeout(function () { me.style.opacity = 1; }, 900); });
+      wireScrub(dp, dp.querySelector('svg'), function (vx, svg) {
+        var G = window.__gpDot; if (!G) return null;
+        var v = G.LO + (vx - G.PL) / (G.W - G.PL - G.PR) * (G.HI - G.LO), k = Math.floor(v / G.BW) * G.BW; if (k < G.LO) k = G.LO; if (k > G.HI - G.BW) k = G.HI - G.BW;
+        var n = 0; for (var i = 0; i < G.vals.length; i++) if (Math.floor(G.vals[i] / G.BW) * G.BW === k) n++;
+        var hl = svg.querySelector('.hl'); hl.setAttribute('x', G.X(k)); hl.setAttribute('opacity', 1);
+        return { x: G.X(k + G.BW / 2), y: G.BASE - Math.max(n, 1) * G.STEP - 4, html: t('binN')(k, (k + G.BW - 0.1).toFixed(1), n) };
+      }, function (svg) { var hl = svg.querySelector('.hl'); if (hl) hl.setAttribute('opacity', 0); });
+    }
+    // ③ progress draw + scrub
+    var pg = document.getElementById('gpProg');
+    if (pg && pg.querySelector('.ml')) {
+      var ml = pg.querySelector('.ml'), ar = pg.querySelector('.ar'), md = pg.querySelector('.md');
+      if (ml) { onSeen(pg, function () { ml.style.transition = 'stroke-dashoffset 1.3s cubic-bezier(.22,1,.36,1)'; ml.style.strokeDashoffset = 0; if (ar) ar.style.opacity = 1; setTimeout(function () { if (md) md.style.opacity = 1; }, 1200); }); }
+      wireScrub(pg, pg.querySelector('svg'), function (vx, svg) {
+        var G = window.__gpProg; if (!G) return null; var b = 0; for (var i = 0; i < G.pts.length; i++) if (Math.abs(G.pts[i].x - vx) < Math.abs(G.pts[b].x - vx)) b = i;
+        var p = G.pts[b], gd = svg.querySelector('.gd'), cd = svg.querySelector('.cd');
+        gd.setAttribute('x1', p.x); gd.setAttribute('x2', p.x); gd.setAttribute('opacity', .5);
+        md.setAttribute('cx', p.x); md.setAttribute('cy', p.y); md.style.opacity = 1;
+        if (p.cy !== null) { cd.setAttribute('cx', p.x); cd.setAttribute('cy', p.cy); cd.setAttribute('opacity', 1); }
+        var lab = LANG === 'ko' ? (p.d.getMonth() + 1) + '월 ' + p.d.getDate() + '일' : t('months')[p.d.getMonth()] + ' ' + p.d.getDate();
+        return { x: p.x, y: Math.min(p.y, p.cy === null ? p.y : p.cy) - 10, html: '<b>' + lab + '</b> · ' + t('me') + ' <span class="g">' + p.g.toFixed(1) + '</span>' + (p.c !== null ? ' · ' + t('cls') + ' ' + p.c.toFixed(1) : ''), clamp: true };
+      }, function (svg) { var G = window.__gpProg; svg.querySelector('.gd').setAttribute('opacity', 0); svg.querySelector('.cd').setAttribute('opacity', 0); if (G) { var l = G.pts[G.pts.length - 1]; md.setAttribute('cx', l.x); md.setAttribute('cy', l.y); } });
+    }
+    // ④ goal chips
+    var G4 = window.__gpGoal, box = document.getElementById('gpChips');
+    if (G4 && box) {
+      var COL = { ATTP: '#98a4ff', WA: '#2443ee', GP: 'repeating-linear-gradient(45deg,#2443ee 0 4px,#c9d0ff 4px 8px)', FE: '#22ff5e' };
+      var rem = '', lgd = '';
+      for (var r = 0; r < G4.parts.length; r++) { var pr = G4.parts[r], col = COL[pr.p] || '#cfcfcf'; rem += '<i style="flex:' + pr.w.toFixed(2) + ';background:' + col + '"></i>'; lgd += '<span><i style="background:' + col + '"></i>' + esc(pr.label) + ' <b>' + pr.w.toFixed(1) + '%</b></span>'; }
+      document.getElementById('gpRem').innerHTML = rem; document.getElementById('gpRemLg').innerHTML = lgd;
+      var pl = letter(G4.proj), pidx = CUTS.length; for (var q = 0; q < CUTS.length; q++) if (CUTS[q][0] === pl) pidx = q;
+      var lo = Math.min(CUTS.length - 1, pidx + 1), goals = CUTS.slice(0, lo + 1).slice(-6), shown = 0, def = 0;
+      for (var gq = 0; gq < goals.length; gq++) if (CUTS.indexOf(goals[gq]) === Math.max(0, pidx - 1)) def = gq;
+      var pick = function (i) {
+        for (var b = 0; b < box.children.length; b++) box.children[b].className = b === i ? 'on' : '';
+        var g = goals[i], need = (g[1] - G4.fixed) / G4.remain * 100, nn = document.getElementById('gpNN');
+        document.getElementById('gpNH').innerHTML = esc(t('needHead')(g[0], g[1], G4.remain.toFixed(1))) + ' <span class="estb">' + t('est') + '</span>';
+        var from = shown, t0 = performance.now(); (function s(now) { var p = Math.min(1, (now - t0) / 500), v = from + (need - from) * gpEase(p); nn.innerHTML = (LANG === 'ko' ? '<small>약 </small>' : '<small>~</small>') + Math.max(0, v).toFixed(1) + '<small> %</small>'; if (p < 1) requestAnimationFrame(s); })(t0); shown = need;
+        var m = document.getElementById('gpNM'); m.style.width = Math.max(2, Math.min(100, need)) + '%'; m.style.background = need > 100 ? '#d92d50' : need > 95 ? '#ff9f1a' : '#2443ee';
+        document.getElementById('gpNT').textContent = need > 100 ? t('needNo') : need <= 0 ? t('needDone') : t('needTxt')(need.toFixed(1));
+      };
+      box.innerHTML = '';
+      goals.forEach(function (g, i) { var b = document.createElement('button'); b.type = 'button'; b.textContent = g[0]; b.onclick = function () { pick(i); }; box.appendChild(b); });
+      pick(def);
+    }
+  }
+
+  // drag / hover a chart to show a tooltip
+  function wireScrub(host, svg, show, hide) {
+    if (!host || !svg) return; var tip = host.querySelector('.gtip'), down = false, vb = svg.viewBox.baseVal;
+    function at(e) { var r = svg.getBoundingClientRect(), vx = (e.clientX - r.left) / r.width * vb.width, o = show(vx, svg); if (!o) return;
+      tip.innerHTML = o.html; var hw = tip.offsetWidth / 2, px = o.x / vb.width * r.width; px = Math.max(hw, Math.min(r.width - hw, px)); tip.style.left = px + 'px'; tip.style.top = (o.y / vb.height * r.height) + 'px'; tip.style.opacity = 1; }
+    function off() { down = false; tip.style.opacity = 0; hide(svg); }
+    svg.addEventListener('pointerdown', function (e) { down = true; try { svg.setPointerCapture(e.pointerId); } catch (x) {} at(e); });
+    svg.addEventListener('pointermove', function (e) { if (down || e.pointerType === 'mouse') at(e); });
+    svg.addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') setTimeout(off, 1200); else down = false; });
+    svg.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') off(); });
+  }
+
+  // ② class distribution as a dot plot (one dot per student)
+  function buildDots(vals, my) {
+    var mn = Math.min.apply(null, vals.concat([my])), mx = Math.max.apply(null, vals.concat([my]));
+    var LO = Math.max(0, Math.min(60, Math.floor(mn / 10) * 10)), HI = Math.max(100, Math.ceil(mx / 2) * 2 + 2);
+    var BW = (HI - LO) > 60 ? 4 : 2, W = 560, PL = 8, PR = 8, R = 6.2, STEP = 13;
+    function X(v) { return PL + (v - LO) / (HI - LO) * (W - PL - PR); }
+    var cnt = {}, maxh = 0; for (var i = 0; i < vals.length; i++) { var k = Math.floor(vals[i] / BW) * BW; cnt[k] = (cnt[k] || 0) + 1; if (cnt[k] > maxh) maxh = cnt[k]; }
+    var BASE = 44 + (maxh + 1) * STEP, H = BASE + 50;
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
+    [[90, HI, 'A', '#e8ebff'], [80, 90, 'B', '#f0f2ff'], [70, 80, 'C', '#f7f8ff']].forEach(function (z) { if (z[1] <= LO) return; var a = Math.max(LO, z[0]); s += '<rect x="' + X(a) + '" y="0" width="' + (X(z[1]) - X(a)) + '" height="' + (BASE + 8) + '" fill="' + z[3] + '"/><text x="' + ((X(a) + X(z[1])) / 2) + '" y="26" text-anchor="middle" style="font:900 22px Archivo,sans-serif" fill="#2443ee" fill-opacity=".28">' + z[2] + '</text>'; });
+    s += '<rect class="hl" x="0" y="34" width="' + (X(LO + BW) - X(LO)) + '" height="' + (BASE - 26) + '" rx="6" fill="#2443ee" fill-opacity=".1" opacity="0"/>';
+    s += '<line x1="' + PL + '" x2="' + (W - PR) + '" y1="' + (BASE + 8) + '" y2="' + (BASE + 8) + '" stroke="#111" stroke-width="1.5"/>';
+    for (var g = Math.ceil(LO / 10) * 10; g <= HI; g += 10) s += '<text x="' + X(g) + '" y="' + (BASE + 26) + '" font-size="12" text-anchor="middle" fill="#777">' + g + '</text>';
+    var avg = 0; for (var a2 = 0; a2 < vals.length; a2++) avg += vals[a2]; avg /= vals.length;
+    s += '<path d="M' + X(avg) + ',' + (BASE + 9) + ' l-6,9 h12 z" fill="#111"/><text x="' + X(avg) + '" y="' + (BASE + 46) + '" font-size="12" font-weight="800" text-anchor="middle" fill="#111">' + escSvg(t('cls') + ' ' + avg.toFixed(1)) + '</text>';
+    var sorted = vals.slice().sort(function (a, b) { return a - b; }), st = {}, skipped = false;
+    for (var d = 0; d < sorted.length; d++) {
+      var v = sorted[d], kk = Math.floor(v / BW) * BW;
+      if (!skipped && Math.abs(v - my) < 0.05) { skipped = true; continue; } // my own dot is drawn separately on top
+      st[kk] = st[kk] || 0; var j = st[kk]++, col = v >= 90 ? '#2443ee' : v >= 80 ? '#5a6bff' : v >= 70 ? '#98a4ff' : '#c3c8dc';
+      s += '<circle class="d" r="' + R + '" fill="' + col + '" stroke="#fff" stroke-width="1.2" data-o=".9" data-t="translate(' + X(kk + BW / 2) + 'px,' + (BASE - j * STEP) + 'px)" style="opacity:0;transform:translate(' + X(kk + BW / 2) + 'px,' + (BASE + 40) + 'px);transition-delay:' + (d * 20) + 'ms"/>';
+    }
+    var mk = Math.floor(my / BW) * BW, mh = st[mk] || 0, mxp = X(mk + BW / 2), myp = BASE - mh * STEP, bx = Math.max(36, Math.min(W - 36, mxp)), lbl = t('you') + ' ' + my.toFixed(1);
+    s += '<g class="meg" style="opacity:0;transition:opacity .4s"><circle cx="' + mxp + '" cy="' + myp + '" r="' + (R + 1.5) + '" fill="#22ff5e" stroke="#111" stroke-width="2"/>';
+    s += '<rect x="' + (bx - 36) + '" y="' + (myp - 35) + '" width="72" height="22" rx="11" fill="#111"/><path d="M' + (mxp - 5) + ',' + (myp - 14) + ' L' + mxp + ',' + (myp - 8) + ' L' + (mxp + 5) + ',' + (myp - 14) + ' z" fill="#111"/>';
+    s += '<text x="' + bx + '" y="' + (myp - 20) + '" font-size="12.5" font-weight="800" text-anchor="middle" fill="#22ff5e">' + escSvg(lbl) + '</text></g>';
+    window.__gpDot = { X: X, LO: LO, HI: HI, BW: BW, W: W, PL: PL, PR: PR, BASE: BASE, STEP: STEP, vals: vals };
+    return s + '</svg>';
+  }
+
+  // ③ progress on a real date axis (WKn-1 = Wednesday of week n, WKn-2 = the following Monday)
+  var TERM_START = new Date(2026, 8, 2), TERM_WEEKS = 16;
+  function wkDate(label) { var m = String(label || '').match(/WK\s*(\d+)\s*-\s*(\d)/i); if (!m) return null; return new Date(TERM_START.getFullYear(), TERM_START.getMonth(), TERM_START.getDate() + 7 * (parseInt(m[1], 10) - 1) + (m[2] === '2' ? 5 : 0)); }
+  function buildProgress2(points) {
+    var rows = [], last = null;
+    for (var i = 0; i < points.length; i++) { var d = wkDate(points[i].label) || last; if (!d) continue; last = d;
+      var row = { d: d, g: points[i].grade, c: (points[i].classGrade === undefined ? null : points[i].classGrade) };
+      if (rows.length && rows[rows.length - 1].d.getTime() === d.getTime()) rows[rows.length - 1] = row; else rows.push(row); }
+    if (rows.length < 2) { window.__gpProg = null; return buildProgress(points); }
+    var S = new Date(TERM_START.getFullYear(), TERM_START.getMonth(), 1), E = new Date(TERM_START.getTime() + TERM_WEEKS * 7 * 864e5 + 4 * 864e5), NOW = new Date();
+    var W = 560, H = 220, PL = 34, PR = 12, PT = 26, PB = 32, mn = 100, mx = 0;
+    rows.forEach(function (r) { mn = Math.min(mn, r.g, r.c === null ? r.g : r.c); mx = Math.max(mx, r.g, r.c === null ? r.g : r.c); });
+    var cap = mx > 100 ? Math.ceil(mx / 5) * 5 + 5 : 100, lo = Math.max(0, Math.floor(mn / 10) * 10 - 5), hi = Math.min(cap, Math.ceil(mx / 10) * 10 + 5); if (hi - lo < 20) { lo = Math.max(0, lo - 10); hi = Math.min(cap, hi + 10); }
+    function X(d) { return PL + (W - PL - PR) * (d - S) / (E - S); } function Y(v) { return PT + (H - PT - PB) * (1 - (v - lo) / (hi - lo)); }
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gpFut" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="8" fill="#f3f3f3"/></pattern><linearGradient id="gpPg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2443ee" stop-opacity=".18"/><stop offset="100%" stop-color="#2443ee" stop-opacity="0"/></linearGradient></defs>';
+    var nowX = Math.max(PL, Math.min(W - PR, X(NOW)));
+    if (NOW < E) s += '<rect x="' + nowX + '" y="' + (PT - 10) + '" width="' + (W - PR - nowX) + '" height="' + (H - PB - PT + 10) + '" fill="url(#gpFut)"/>' + (W - PR - nowX > 90 ? '<text x="' + ((nowX + W - PR) / 2) + '" y="' + Y(lo + (hi - lo) * .25) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#aaa">' + escSvg(t('restTerm')) + '</text>' : '');
+    for (var gl = 0; gl <= 2; gl++) { var gv = lo + (hi - lo) * gl / 2; s += '<line x1="' + PL + '" x2="' + (W - PR) + '" y1="' + Y(gv) + '" y2="' + Y(gv) + '" stroke="#ececec"/><text x="' + (PL - 6) + '" y="' + (Y(gv) + 4) + '" font-size="12" text-anchor="end" fill="#888">' + Math.round(gv) + '</text>'; }
+    for (var mo = new Date(S); mo <= E; mo = new Date(mo.getFullYear(), mo.getMonth() + 1, 1)) { var x = X(mo); s += '<line x1="' + x + '" x2="' + x + '" y1="' + (H - PB) + '" y2="' + (H - PB + 5) + '" stroke="#999"/><text x="' + (x + 3) + '" y="' + (H - 10) + '" font-size="12.5" font-weight="700" fill="#555">' + escSvg(t('months')[mo.getMonth()]) + '</text>'; }
+    s += '<line x1="' + PL + '" x2="' + (W - PR) + '" y1="' + (H - PB) + '" y2="' + (H - PB) + '" stroke="#111" stroke-width="1.2"/>';
+    if (NOW > S && NOW < E) s += '<line x1="' + nowX + '" x2="' + nowX + '" y1="' + (PT - 10) + '" y2="' + (H - PB) + '" stroke="#111" stroke-dasharray="3 3"/><text x="' + nowX + '" y="' + (PT - 14) + '" font-size="11.5" font-weight="800" text-anchor="middle" fill="#111">' + escSvg(t('today')) + '</text>';
+    var pts = rows.map(function (r) { return { d: r.d, g: r.g, c: r.c, x: X(r.d), y: Y(r.g), cy: r.c === null ? null : Y(r.c) }; });
+    var dm = pts.map(function (p, i) { return (i ? 'L' : 'M') + p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' ');
+    var cpts = pts.filter(function (p) { return p.cy !== null; });
+    s += '<path class="ar" d="' + dm + ' L' + pts[pts.length - 1].x.toFixed(1) + ',' + Y(lo) + ' L' + pts[0].x.toFixed(1) + ',' + Y(lo) + ' Z" fill="url(#gpPg)" style="opacity:0;transition:opacity .8s 1s"/>';
+    if (cpts.length > 1) s += '<path d="' + cpts.map(function (p, i) { return (i ? 'L' : 'M') + p.x.toFixed(1) + ',' + p.cy.toFixed(1); }).join(' ') + '" fill="none" stroke="#9a9a9a" stroke-width="1.6" stroke-dasharray="4 4"/>';
+    s += '<path class="ml" pathLength="1" d="' + dm + '" fill="none" stroke="#2443ee" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" style="stroke-dasharray:1;stroke-dashoffset:1"/>';
+    s += '<line class="gd" x1="0" x2="0" y1="' + (PT - 6) + '" y2="' + (H - PB) + '" stroke="#111" opacity="0"/><circle class="cd" r="4.5" fill="#9a9a9a" opacity="0"/>';
+    var lp = pts[pts.length - 1];
+    s += '<circle class="md" cx="' + lp.x + '" cy="' + lp.y + '" r="6.5" fill="#22ff5e" stroke="#111" stroke-width="2" style="opacity:0;transition:opacity .3s"/>';
+    window.__gpProg = { pts: pts };
+    return s + '</svg>';
+  }
 
   // ═══════════════════════════════════════
   // CHARTS (style A: rounded bars + KDE, lime "You")
