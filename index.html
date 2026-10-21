@@ -248,7 +248,7 @@
       dist: '점수 분포', students: '명', you: '나', progress: '진행 추이', me: '나', cls: '반 평균',
       forecast: '이대로 가면', forecastNote: '아직 나오지 않은 항목을 지금까지의 평균으로 가정한 값입니다.', final: '최종 성적', finalNote: '모든 항목이 반영되었습니다.',
       goal: '목표 학점까지', remainAvg: '남은 항목 평균 점수', atLeast: '% 이상', unreachable: '만점을 받아도 불가', topGrade: '최고 등급입니다',
-      other: '다른 코드 입력', footer: '점수는 강의 스프레드시트의 최신 데이터를 반영합니다.',
+      other: '다른 코드 입력', footer: '점수는 강의 스프레드시트의 최신 데이터를 반영합니다.', lastUp: function (d) { return '마지막 업데이트 ' + d; },
       est: '예측', above: function (d) { return '반 평균보다 ' + d + '점 높음'; }, below: function (d) { return '반 평균보다 ' + d + '점 낮음'; }, same: '반 평균과 같음', avgTick: '반 평균', details: '세부 보기 ›', noItems: '아직 점수가 없습니다', mix: '남은 비중 구성', today: '오늘', restTerm: '남은 학기', months: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
       needHead: function (g, c, r) { return g + ' (' + c + '점 이상) 받으려면 남은 약 ' + r + '%에서 평균'; },
       needTxt: function (n) { return '남은 출석·과제·발표·기말에서 평균 약 ' + n + '%가 필요할 것으로 예측됩니다.'; },
@@ -264,7 +264,7 @@
       dist: 'Score distribution', students: ' students', you: 'You', progress: 'Progress', me: 'Me', cls: 'Class avg',
       forecast: 'At this pace', forecastNote: 'Assumes your current average on everything not yet graded.', final: 'Final grade', finalNote: 'All components are in.',
       goal: 'To reach', remainAvg: 'avg. on remaining work', atLeast: '% or higher', unreachable: 'Not reachable even with full marks', topGrade: 'Highest grade',
-      other: 'Enter another code', footer: 'Grades reflect the latest data from the course spreadsheet.',
+      other: 'Enter another code', footer: 'Grades reflect the latest data from the course spreadsheet.', lastUp: function (d) { return 'Last updated ' + d; },
       est: 'Estimate', above: function (d) { return d + ' above class avg'; }, below: function (d) { return d + ' below class avg'; }, same: 'Same as class avg', avgTick: 'Class avg', details: 'Details ›', noItems: 'No scores yet', mix: 'What is left', today: 'Today', restTerm: 'Rest of term', months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
       needHead: function (g, c, r) { return 'For ' + g + ' (' + c + '+), average on the remaining ~' + r + '%'; },
       needTxt: function (n) { return 'You would need about ' + n + '% on average across the remaining attendance, assignments, presentation and final.'; },
@@ -573,7 +573,7 @@
       h += '<div class="scaleNote">A+ 97 · A0 94 · A- 90 · B+ 87 · B0 84 · B- 80 · C+ 77 · C0 74 · C- 70 · D+ 67 · D0 64 · D- 60</div>';
     }
 
-    h += '<p class="foot">' + t('footer') + '<br><a href="#" onclick="showCode();return false;">' + t('other') + '</a></p>';
+    h += '<p class="foot">' + (fmtDay(data.lastUpdated) ? t('lastUp')(fmtDay(data.lastUpdated)) : t('footer')) + '<br><a href="#" onclick="showCode();return false;">' + t('other') + '</a></p>';
     el.innerHTML = h;
     setTimeout(initDash, 30);
   }
@@ -799,6 +799,8 @@
     if (parts.length >= 2) return (LANG === 'ko' ? parts[1] : parts[0]).trim();
     return String(n || '').trim();
   }
+  function fmtDay(s) { var m = String(s || '').match(/(\d{4})-(\d{2})-(\d{2})/); if (!m) return ''; var y = +m[1], mo = +m[2], d = +m[3];
+    return LANG === 'ko' ? y + '년 ' + mo + '월 ' + d + '일' : t('months')[mo - 1] + ' ' + d + ', ' + y; }
   function fmtDate(s) { // "yyyy-MM-dd HH:mm"
     var m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})/);
     if (!m) return s;
