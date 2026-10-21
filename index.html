@@ -498,7 +498,7 @@
 
     // ── header ──
     h += '<div class="top">' + LOGO + '<div class="r2"><span class="seg mini" role="group" aria-label="Language"><button type="button" class="' + (LANG === 'ko' ? 'on' : '') + '" onclick="setLang(\'ko\')">KO</button><button type="button" class="' + (LANG === 'en' ? 'on' : '') + '" onclick="setLang(\'en\')">EN</button></span></div></div>';
-    h += '<div class="metaBar"><span>' + esc(data.courseName || '') + '</span><span>' + (data.lastUpdated ? t('updated') + ' ' + esc(fmtDate(data.lastUpdated)) : '') + '</span></div>';
+    h += '<div class="metaBar"><span>' + esc(data.courseName || '') + '</span></div>';
 
     // ── summary ──
     h += '<div class="who"><div><div class="nm">' + esc(data.studentName || '') + '</div></div><div class="cd">CODE<b>' + esc(data.code || '') + '</b></div></div>';
