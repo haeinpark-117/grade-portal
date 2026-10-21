@@ -75,7 +75,9 @@ h2 em{color:var(--blue);font-style:normal}
 
 /* bands */
 .band{display:flex;align-items:center;gap:10px;margin:7px 0;border-radius:9px;transition:background .3s}
-.band .n{width:96px;font:700 13.5px var(--grot);display:flex;align-items:center}
+.band .lt{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;background:var(--ink);color:#fff;font:900 13px var(--grot);margin-right:8px;flex:none;transition:background .3s}
+.band.mine .lt{background:var(--blue)}
+.band .n{width:150px;font:700 13.5px var(--grot);display:flex;align-items:center}
 .band .t{flex:1;height:26px;background:#f2f2f2;border-radius:7px;overflow:hidden}
 .band .t i{display:block;height:100%;width:0;background:var(--ink);border-radius:7px;transition:width .8s var(--ease),background .3s}
 .band.mine .t i{background:var(--blue)}
@@ -134,25 +136,25 @@ var PTS=[];S00.forEach(function(v){PTS.push({v:v,s:'00'});});S01.forEach(functio
 var T={
  ko:{sub:'중간고사 점수 = 시험 30점 + Extra credit (최대 2점)',ask:'내 중간고사 점수 (EC 포함)',
   hint:'점수를 입력하거나 슬라이더를 움직여 보세요. Grade Portal의 Midterm 항목에서 Midterm과 ExtraCredit 점수를 더한 값입니다. 입력한 점수는 이 화면에만 표시되고 저장되지 않습니다.',
-  all:'전체',s00:'00분반',s01:'01분반',avg:'평균',med:'중앙값',n:'응시',unit:'명',
+  all:'전체',s00:'00분반',s01:'01분반',avg:'평균',med:'30점 이상',n:'응시',unit:'명',
   h1:'모든 점수를 <em>한눈에</em>',w1:'점 하나가 학생 한 명입니다. 점을 누르면 그 점수대 인원이 보입니다.',
-  h2:'점수 <em>구간</em>',w2:'각 구간에 몇 명이 있는지 보여줍니다. 파란 막대가 내가 속한 구간입니다.',
+  h2:'점수 <em>구간</em>',w2:'30점 만점 기준 90%(27점) 이상 A, 80%(24점) 이상 B, 70%(21점) 이상 C로 나눈 참고용 구간이며 최종 학점과는 다릅니다. 파란 막대가 내가 속한 구간입니다.',
   top:function(s,p){return s+' 상위 '+p+'%';},diff:function(d){return '평균 '+d;},
-  bands:['27점 이상','24 – 26.9','21 – 23.9','18 – 20.9','18점 미만'],me:'나',medl:'중앙값',
+  bands:['27점 이상','24 – 26.9','21 – 23.9','21점 미만'],me:'나',medl:'중앙값',
   col:function(c,n){return c+'점대 '+n+'명';},
   foot:'이 페이지에는 학생 이름이나 코드 없이 점수 목록만 들어 있습니다.'},
  en:{sub:'Midterm score = exam (30 pts) + extra credit (up to 2 pts)',ask:'My midterm score (incl. EC)',
   hint:'Type your score or drag the slider. It is your Midterm plus ExtraCredit under Midterm in the Grade Portal. Nothing you enter is saved.',
-  all:'All',s00:'Section 00',s01:'Section 01',avg:'Mean',med:'Median',n:'Students',unit:'',
+  all:'All',s00:'Section 00',s01:'Section 01',avg:'Mean',med:'30 or above',n:'Students',unit:'',
   h1:'Every score <em>at a glance</em>',w1:'Each dot is one student. Tap a dot to see how many scored in that range.',
-  h2:'Score <em>bands</em>',w2:'How many students fall in each band. The blue bar is your band.',
+  h2:'Score <em>bands</em>',w2:'Bands for reference: A = 90% (27 pts) or above, B = 80% (24), C = 70% (21). These are not final course grades. The blue bar is your band.',
   top:function(s,p){return 'Top '+p+'% · '+s;},diff:function(d){return d+' vs. mean';},
-  bands:['27 and above','24 – 26.9','21 – 23.9','18 – 20.9','Below 18'],me:'You',medl:'Median',
+  bands:['27 and above','24 – 26.9','21 – 23.9','Below 21'],me:'You',medl:'Median',
   col:function(c,n){return c+'–'+c+'.9: '+n;},
   foot:'This page contains only a list of scores, with no student names or codes.'}
 };
 var LANG='ko',K='all',ME=null;
-var B=[[27,99],[24,27],[21,24],[18,21],[0,18]];
+var B=[[27,99],[24,27],[21,24],[0,21]],LET=['A','B','C',''];
 function cur(){return PTS.filter(function(p){return K==='all'||p.s===K;}).map(function(p){return p.v;}).sort(function(a,b){return a-b;});}
 function mean(a){var s=0;for(var i=0;i<a.length;i++)s+=a[i];return s/a.length;}
 function med(a){var m=a.length>>1;return a.length%2?a[m]:(a[m-1]+a[m])/2;}
@@ -178,9 +180,6 @@ function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k i
 var colhl=el('rect',{x:0,y:8,width:X(1)-X(0),height:BASE-2,rx:6,fill:'#eef0ff',opacity:0,'class':'colhl'});
 el('line',{x1:PL,x2:W-PR,y1:BASE+8,y2:BASE+8,stroke:'#111','stroke-width':1.5});
 for(var g=10;g<=30;g+=5){var tx=el('text',{x:X(g+.5),y:BASE+26,'font-size':12,'text-anchor':'middle',fill:'#777'});tx.textContent=g;}
-var medG=el('g',{'class':'medl'});
-el('line',{x1:0,x2:0,y1:14,y2:BASE+8,stroke:'#111','stroke-dasharray':'4 3'},medG);
-var medT=el('text',{x:-5,y:22,'font-size':12,'font-weight':700,'text-anchor':'end'},medG);
 var guide=el('line',{x1:0,x2:0,y1:10,y2:BASE+8,stroke:'#22c55e','stroke-width':2,opacity:0,'class':'guide'});
 var dots=PTS.map(function(p,i){var c=el('circle',{cx:0,cy:0,r:R,fill:'#2443ee','class':'dot'});c.style.opacity=0;c.style.transform='translate('+X(Math.floor(p.v)+.5)+'px,'+(BASE+40)+'px)';c.style.transitionDelay=(i*12)+'ms';return c;});
 var meC=el('circle',{cx:0,cy:0,r:R+1.5,fill:'#22ff5e',stroke:'#111','stroke-width':2,'class':'mecirc'});meC.style.opacity=0;
@@ -209,7 +208,7 @@ function layout(){
     meT.textContent=t('me');meT.style.opacity=1;meT.style.transform='translate('+mx+'px,'+(my-12)+'px)';
     
   } else {meC.style.opacity=0;meT.style.opacity=0;guide.style.opacity=0;}
-  var a=cur(),md=med(a);medG.style.transform='translateX('+X(Math.floor(md)+.5)+'px)';medT.textContent=t('medl')+' '+f1(md);
+  
   window.__cols=cols;
 }
 
@@ -225,11 +224,11 @@ svg.addEventListener('click',function(e){
 
 // ---------- bands ----------
 var bandsEl=document.getElementById('bands'),bandRows=B.map(function(){var d=document.createElement('div');d.className='band';
-  d.innerHTML='<div class="n"><span class="bl"></span><span class="you"></span></div><div class="t"><i></i></div><div class="c"></div>';bandsEl.appendChild(d);return d;});
+  d.innerHTML='<div class="n"><b class="lt"></b><span class="bl"></span><span class="you"></span></div><div class="t"><i></i></div><div class="c"></div>';bandsEl.appendChild(d);return d;});
 
 function render(){
   var a=cur(),m=mean(a),md=med(a);
-  countTo('avg',m,1);countTo('med',md,1);countTo('n',a.length,0,t('unit')?'<small>'+t('unit')+'</small>':'');
+  countTo('avg',m,1);countTo('med',a.filter(function(x){return x>=30;}).length,0,t('unit')?'<small>'+t('unit')+'</small>':'');countTo('n',a.length,0,t('unit')?'<small>'+t('unit')+'</small>':'');
   var ask=document.getElementById('ask');
   if(ME!==null){
     var above=0;for(var i=0;i<a.length;i++)if(a[i]>ME)above++;
@@ -242,7 +241,7 @@ function render(){
   layout();
   var counts=B.map(function(b){return a.filter(function(x){return x>=b[0]&&x<b[1];}).length;}),mx=Math.max.apply(null,counts);
   bandRows.forEach(function(row,i){var b=B[i],mine=ME!==null&&ME>=b[0]&&ME<b[1];
-    row.className='band'+(mine?' mine':'');row.querySelector('.bl').textContent=t('bands')[i];row.querySelector('.you').textContent=t('me');
+    row.className='band'+(mine?' mine':'');row.querySelector('.bl').textContent=t('bands')[i];var lt=row.querySelector('.lt');lt.textContent=LET[i];lt.style.visibility=LET[i]?'visible':'hidden';row.querySelector('.you').textContent=t('me');
     row.querySelector('i').style.width=(counts[i]/mx*100)+'%';
     row.querySelector('.c').innerHTML=counts[i]+(LANG==='ko'?'명':'')+' <span>'+Math.round(counts[i]/a.length*100)+'%</span>';});
 }
