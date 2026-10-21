@@ -570,15 +570,15 @@
   }
 
   function buildProgress(points) {
-        var n = points.length, pL = 30, pR = 24, pT = 32, pB = 26, W = Math.max(320, n * 48 + pL + pR), H = 150;
+        var n = points.length, pL = 30, pR = 20, pT = 30, pB = 30, W = 380, H = 180, step = Math.max(1, Math.ceil(n / 6));
     var cW = W - pL - pR, cH = H - pT - pB, mn = 100, mx = 0;
     for (var i = 0; i < n; i++) { var g1 = points[i].grade, g2 = points[i].classGrade; if (g1 < mn) mn = g1; if (g1 > mx) mx = g1; if (g2 !== undefined && g2 !== null) { if (g2 < mn) mn = g2; if (g2 > mx) mx = g2; } }
         var cap = mx > 100 ? Math.ceil(mx / 5) * 5 + 5 : 100, rMin = Math.max(0, Math.floor(mn / 10) * 10 - 5), rMax = Math.min(cap, Math.ceil(mx / 10) * 10 + 5);
         if (rMax - rMin < 20) { rMin = Math.max(0, rMin - 10); rMax = Math.min(cap, rMax + 10); }
     function X(i) { return pL + cW * i / Math.max(1, n - 1); }
     function Y(v) { return pT + cH - cH * (v - rMin) / (rMax - rMin); }
-    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="' + (n > 7 ? 'min-width:' + Math.min(W, 560) + 'px' : '') + '">';
-    for (var gl = 0; gl <= 3; gl++) { var gv = rMin + (rMax - rMin) * gl / 3, gy = Y(gv); s += '<line x1="' + pL + '" y1="' + gy + '" x2="' + (W - pR) + '" y2="' + gy + '" stroke="#e6e6e6"/><text x="' + (pL - 6) + '" y="' + (gy + 3) + '" text-anchor="end" font-size="10.5" fill="#9a9a9a">' + Math.round(gv) + '</text>'; }
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
+    for (var gl = 0; gl <= 3; gl++) { var gv = rMin + (rMax - rMin) * gl / 3, gy = Y(gv); s += '<line x1="' + pL + '" y1="' + gy + '" x2="' + (W - pR) + '" y2="' + gy + '" stroke="#e6e6e6"/><text x="' + (pL - 6) + '" y="' + (gy + 3) + '" text-anchor="end" font-size="12" fill="#777777">' + Math.round(gv) + '</text>'; }
     if (points[0].classGrade !== undefined) { var cp = []; for (var c = 0; c < n; c++) if (points[c].classGrade !== null) cp.push(X(c).toFixed(1) + ',' + Y(points[c].classGrade).toFixed(1)); s += '<polyline points="' + cp.join(' ') + '" fill="none" stroke="#9a9a9a" stroke-width="1.5" stroke-dasharray="3 3"/>'; }
     var pp = []; for (var p = 0; p < n; p++) pp.push(X(p).toFixed(1) + ',' + Y(points[p].grade).toFixed(1));
     s += '<polyline points="' + pp.join(' ') + '" fill="none" stroke="#2443ee" stroke-width="2.6" stroke-linejoin="round"/>';
@@ -586,8 +586,9 @@
       var last = d === n - 1;
       s += '<circle cx="' + X(d) + '" cy="' + Y(points[d].grade) + '" r="' + (last ? 6 : 3.2) + '" fill="' + (last ? '#22ff5e' : '#2443ee') + '" stroke="' + (last ? '#111111' : '#fff') + '" stroke-width="' + (last ? 1.5 : 1.5) + '"/>';
       if (last) s += '<text x="' + X(d) + '" y="' + (Y(points[d].grade) - 10) + '" text-anchor="' + (d === n - 1 ? 'end' : 'middle') + '" font-size="11.5" font-weight="700" fill="#111111">' + points[d].grade.toFixed(1) + '</text>';
+      if ((n - 1 - d) % step !== 0 || (!last && step > 1 && n - 1 - d <= step)) continue;
       var lb = itemName(points[d].label); if (lb.length > 7) lb = lb.substring(0, 6) + '…';
-            s += '<text x="' + X(d) + '" y="' + (H - 8) + '" text-anchor="' + (n > 1 && d === 0 ? 'start' : (last ? 'end' : 'middle')) + '" font-size="10.5" fill="#9a9a9a">' + escSvg(lb) + '</text>';
+            s += '<text x="' + X(d) + '" y="' + (H - 8) + '" text-anchor="' + (n > 1 && d === 0 ? 'start' : (last ? 'end' : 'middle')) + '" font-size="12" fill="#777777">' + escSvg(lb) + '</text>';
     }
     return s + '</svg>';
   }
