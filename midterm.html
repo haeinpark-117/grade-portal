@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -95,7 +95,7 @@ svg text{font-family:var(--sans)}
 <body><div class="wrap">
 
 <div class="top"><span class="course">INTRO TO ENGLISH LINGUISTICS</span>
-  <span class="lang"><button data-l="ko" class="on">KO</button><button data-l="en">EN</button></span></div>
+  <span class="lang"><button data-l="ko">KO</button><button data-l="en" class="on">EN</button></span></div>
 
 <h1>Midterm <em>Results</em></h1>
 <p class="sub" data-t="sub"></p>
@@ -152,7 +152,7 @@ var T={
   col:function(c,n){return c+'–'+c+'.9: '+n;},
   foot:'This page contains only a list of scores, with no student names or codes.'}
 };
-var LANG='ko',K='all',ME=null;
+var LANG='en',K='all',ME=null;
 var B=[[27,99],[24,27],[21,24],[0,21]],LET=['A','B','C',''];
 function cur(){return PTS.filter(function(p){return K==='all'||p.s===K;}).map(function(p){return p.v;}).sort(function(a,b){return a-b;});}
 function mean(a){var s=0;for(var i=0;i<a.length;i++)s+=a[i];return s/a.length;}
