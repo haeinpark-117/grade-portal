@@ -3,119 +3,140 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#eef0ff">
+  <meta name="theme-color" content="#ffffff">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Grade Portal">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23e9eaff'/%3E%3Crect x='12' y='36' width='9' height='18' rx='3' fill='%233840f3'/%3E%3Crect x='27.5' y='24' width='9' height='30' rx='3' fill='%233840f3'/%3E%3Crect x='43' y='10' width='9' height='44' rx='3' fill='%233840f3'/%3E%3C/svg%3E">
   <link rel="apple-touch-icon" sizes="180x180" href="https://haeinpark-117.github.io/grade-portal/apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700&family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap">
   <style>
+    /* v9 · LingQuest-style redesign: white page, heavy black grotesk + blue serif wordmark,
+       hairline rules, underline input, blue pill button, neon-green accents. */
     :root{
-      --accent:#3840f3; --accent-soft:#e9eaff; --accent-mid:#aeb2ff;
-      --pt:#c8f53a; --pt-ink:#1a1a2e; --pt-soft:#f1fbc9;
-      --ink:#1a1a2e; --ink-2:#4b4b66; --ink-3:#8a8aa3;
-      --card:#ffffff; --line:#e3e3ee; --soft:#f5f5f9; --err:#d92d50;
-      --shadow:0 1px 2px rgba(26,26,46,.05),0 8px 24px rgba(56,64,243,.07);
-      --sans:"Plus Jakarta Sans","Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
-      --logo:"Outfit","Plus Jakarta Sans",sans-serif;
-      --mono:"DM Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+      --ink:#111111; --ink-2:#555555; --ink-3:#9a9a9a; --rule:#111111; --hair:#e6e6e6; --soft:#f2f2f2;
+      --blue:#2443ee; --green:#22ff5e; --err:#d92d50;
+      --accent:#2443ee; --accent-soft:#eef0ff;   /* kept for the inline loading message */
+      --grot:"Archivo","Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+      --sans:"Barlow","Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+      --serif:"Fraunces","Noto Serif KR",Georgia,serif;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{-webkit-text-size-adjust:100%}
-    body{min-height:100vh;background:linear-gradient(160deg,#eef0ff 0%,#f8f5ff 55%,#ffffff 100%) fixed;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;padding:24px 14px 48px}
-    .wrap{max-width:600px;margin:0 auto}
+    body{min-height:100vh;background:#ffffff;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;padding:22px 20px 48px}
+    .wrap{max-width:560px;margin:0 auto}
     .hidden{display:none!important}
     .num{font-variant-numeric:tabular-nums}
     svg{display:block}
     button{font-family:inherit}
+    em{font-style:normal;color:var(--blue)}
 
-    /* ── logo ── */
-    .logo{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:inherit}
-    .logo .ic{width:28px;height:28px;border-radius:8px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
-    .logo .ic svg{width:16px;height:16px}
-    .logo b{font-family:var(--logo);font-weight:700;letter-spacing:.14em;font-size:14px}
-
-    /* ── code screen ── */
-    #screenCode{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 72px)}
-    .codeCard{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:32px 26px;width:100%;max-width:380px;text-align:center}
-    .codeCard .bigIc{width:52px;height:52px;border-radius:14px;background:var(--accent-soft);display:grid;place-items:center;margin:0 auto 12px}
-    .codeCard .bigIc svg{width:28px;height:28px}
-    .codeCard h1{font-family:var(--logo);font-weight:700;letter-spacing:.16em;font-size:17px}
-    .codeCard .sub{color:var(--ink-3);font-size:14.5px;margin:4px 0 16px}
-    .seg{display:inline-flex;gap:3px;background:var(--soft);padding:3px;border-radius:10px;margin-bottom:16px}
-    .seg button{border:0;background:transparent;color:var(--ink-3);font-weight:600;font-size:14.5px;padding:6px 14px;border-radius:8px;cursor:pointer;min-height:32px}
-    .seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
-    .seg.mini{margin:0;padding:2px}
-    .seg.mini button{padding:4px 10px;min-height:28px;font-family:var(--mono);font-weight:500}
-    .top .r2{display:flex;align-items:center;gap:10px;margin-left:auto}
-    .codeInput{width:100%;font-family:var(--mono);font-size:23px;letter-spacing:.24em;text-transform:uppercase;text-align:center;padding:14px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);outline:none;min-height:52px}
-    .codeInput:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-    .codeInput::placeholder{letter-spacing:.1em;font-size:15px;color:var(--ink-3);font-family:var(--sans)}
-    .btn{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:48px;padding:12px 16px;border-radius:12px;background:var(--accent);color:#fff;font-weight:700;font-size:16px;border:0;cursor:pointer;margin-top:10px}
-    .btn:disabled{opacity:.6}
-    .btn:active{transform:scale(.98)}
-    .err{color:var(--err);font-size:14.5px;margin-top:12px}
-    .help{color:var(--ink-3);font-size:13px;margin-top:16px;line-height:1.6}
+    /* shared */
+    .metaBar{display:flex;justify-content:space-between;gap:10px;font:600 11px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2)}
+    .rule{height:2px;background:var(--rule)}
+    .eyebrow{font:600 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+    .muted{color:var(--ink-2);font-size:13.5px}
+    .row{display:flex;align-items:center;gap:8px}
     .spin{display:inline-block;animation:spin .8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* ── dashboard ── */
-    .top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-    .meta{color:var(--ink-3);font-size:13px;text-align:right}
-    .meta .code{font-family:var(--mono)}
-    .mc{background:var(--card);border-radius:16px;padding:16px;box-shadow:var(--shadow);margin-bottom:10px}
-    .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
-    .big{font-size:41.5px;font-weight:800;letter-spacing:-.03em;line-height:1}
-    .lg{display:inline-flex;align-items:center;font-family:var(--logo);font-weight:700;padding:5px 12px;border-radius:9px;background:var(--pt);color:var(--pt-ink);font-size:18.5px;letter-spacing:.02em}
-    .muted{color:var(--ink-3);font-size:13px}
-    .row{display:flex;align-items:center;gap:8px}
-    .summary{display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .summary .r{text-align:right}
-    .sumHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
-    .sumHead .nm{font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1.2;word-break:keep-all}
-    .sumHead .cs{color:var(--ink-3);font-size:13px;margin-top:1px}
-    .sumHead .cd{font-family:var(--mono);font-size:16px;letter-spacing:.18em;color:var(--accent);border:1.5px solid var(--accent-mid);padding:4px 10px;border-radius:9px;white-space:nowrap;flex:none}
+    /* language toggle (text tabs) */
+    .seg{display:inline-flex;gap:16px}
+    .seg button{border:0;background:none;color:var(--ink-3);font:600 14px var(--sans);padding:4px 0;cursor:pointer;border-bottom:2px solid transparent;min-height:30px}
+    .seg button.on{color:var(--ink);border-bottom-color:var(--blue)}
+    .seg.mini{gap:10px}
+    .seg.mini button{font-size:12px;letter-spacing:.1em;min-height:26px}
 
-    .cat{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer;min-height:48px;-webkit-tap-highlight-color:transparent}
-    .cat:last-of-type{border-bottom:0}
-    .cat.dim{opacity:.5;cursor:default}
-    .cat .l{display:flex;align-items:center;gap:8px;min-width:0}
-    .cat b{font-size:15.5px}
-    .cat .pfx{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
-    .cat .sc{font-weight:800;font-size:18.5px;white-space:nowrap}
-    .cat .sc small{font-weight:500;color:var(--ink-3);font-size:12.5px}
-    .catIc{width:26px;height:26px;border-radius:8px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
-    .catIc svg{width:14px;height:14px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .chev{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11.5px;color:var(--ink-3);background:var(--soft);flex:none;transition:transform .15s}
-    .cat.open .chev{background:var(--pt);color:var(--pt-ink);transform:rotate(90deg)}
-    .items{display:none;padding:2px 0 8px 34px;border-bottom:1px solid var(--line)}
+    /* ── code screen ── */
+    #screenCode{display:flex;justify-content:center}
+    .codeCard{width:100%;max-width:400px}
+    .wordmark{margin:26px 0 10px;line-height:.86}
+    .wordmark .a{display:block;font:900 76px var(--grot);letter-spacing:-.045em}
+    .wordmark .b{display:block;font:600 78px var(--serif);color:var(--blue);letter-spacing:-.03em;margin-top:-4px;line-height:.95}
+    .codeCard .sub{font:600 15.5px var(--sans);margin-bottom:12px}
+    .art{width:100%;height:auto;margin-top:4px}
+    .langRow{margin-top:18px}
+    .fieldLabel{display:block;font:600 11.5px var(--sans);letter-spacing:.06em;color:var(--ink-2);margin-top:22px}
+    .codeInput{width:100%;font:600 22px var(--sans);letter-spacing:.2em;text-transform:uppercase;padding:10px 2px 9px;border:0;border-bottom:1.5px solid var(--rule);border-radius:0;background:transparent;color:var(--ink);outline:none;min-height:48px}
+    .codeInput:focus{border-bottom-color:var(--blue);box-shadow:0 1.5px 0 var(--blue)}
+    .codeInput::placeholder{letter-spacing:.02em;font-size:16px;font-weight:500;color:var(--ink-3)}
+    .btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;padding:14px 16px;border-radius:999px;background:var(--blue);color:#fff;font:700 17px var(--grot);letter-spacing:-.01em;border:0;cursor:pointer;margin-top:26px}
+    .btn:disabled{opacity:.6}
+    .btn:active{transform:scale(.985)}
+    .err{color:var(--err);font-size:14.5px;margin-top:12px;font-weight:500}
+    .help{color:var(--ink-2);font-size:12.5px;margin-top:14px;line-height:1.6;text-align:center}
+
+    /* ── dashboard ── */
+    .top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+    .logo{display:inline-flex;align-items:baseline;gap:5px;line-height:1}
+    .logo b{font:900 21px var(--grot);letter-spacing:-.04em}
+    .logo i{font:600 21px var(--serif);font-style:normal;color:var(--blue);letter-spacing:-.02em}
+    .top .r2{display:flex;align-items:center;gap:12px}
+    .who{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:14px 0 12px}
+    .who .nm{font:800 27px var(--grot);letter-spacing:-.03em;line-height:1.15;word-break:keep-all}
+    .who .cs{font:500 13px var(--sans);color:var(--ink-2);margin-top:3px}
+    .who .cd{font:600 12px var(--sans);letter-spacing:.18em;color:var(--ink-2);white-space:nowrap;text-align:right}
+    .who .cd b{display:block;font:800 15px var(--grot);letter-spacing:.12em;color:var(--ink);margin-top:2px}
+    .total{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:18px 0 10px}
+    .big{font:900 86px var(--grot);letter-spacing:-.05em;line-height:.85}
+    .big small{font:700 20px var(--grot);letter-spacing:-.02em;color:var(--ink-3);margin-left:4px}
+    .grade{text-align:right}
+    .lg{font:600 60px var(--serif);color:var(--blue);line-height:.9;letter-spacing:-.02em}
+    .grade .eyebrow{margin-top:6px}
+    .chips{display:flex;gap:8px;margin:12px 0 2px;flex-wrap:wrap}
+    .chip{flex:1;min-width:120px;border:1.5px solid var(--rule);border-radius:999px;padding:7px 10px;text-align:center;font:600 13px var(--sans)}
+    .chip b{font:800 13.5px var(--grot);margin-left:3px}
+    .chip.g{background:var(--green);border-color:var(--green)}
+    .sec{margin-top:30px}
+    .secHead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px}
+    .secHead h3{font:800 20px var(--grot);letter-spacing:-.025em}
+    .notYet{font:600 15px var(--sans);color:var(--ink-3);padding-bottom:6px}
+
+    .cat{padding:13px 0 12px;border-top:1px solid var(--hair);cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .cats .cat:last-of-type{border-bottom:1px solid var(--hair)}
+    .cat.dim{cursor:default}
+    .cat .r{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+    .cat .n{font:600 15.5px var(--sans);min-width:0}
+    .cat .pfx{font:600 10.5px var(--sans);letter-spacing:.12em;color:var(--ink-3);margin-left:7px;white-space:nowrap}
+    .cat .sc{font:800 16px var(--grot);white-space:nowrap}
+    .cat .sc small{font:500 12.5px var(--sans);color:var(--ink-3);margin-left:1px}
+    .cat .sc .chev{display:inline-block;margin-left:8px;color:var(--ink-3);font-size:11px;transition:transform .15s}
+    .cat.open .sc .chev{transform:rotate(90deg);color:var(--blue)}
+    .cat.dim .sc{font:600 13px var(--sans);color:var(--ink-3)}
+    .bar{height:6px;background:var(--soft);border-radius:3px;margin-top:9px;overflow:hidden}
+    .bar b{display:block;height:100%;background:var(--ink);border-radius:3px}
+    .cat.open .bar b{background:var(--blue)}
+    .items{display:none;margin:0 0 12px;padding:2px 0 2px 12px;border-left:2px solid var(--blue)}
     .items.open{display:block}
-    .it{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;font-size:15px}
+    .it{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 0;font:500 14px var(--sans)}
     .it .nm{color:var(--ink-2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .it .v{font-weight:700;white-space:nowrap}
-    .it .v small{font-weight:500;color:var(--ink-3)}
-    .it .v.hi{background:var(--pt);color:var(--pt-ink);padding:1px 7px;border-radius:6px}
-    .it .v.hi small{color:inherit;opacity:.7}
+    .it .v{font:700 14px var(--grot);white-space:nowrap}
+    .it .v small{font:500 12px var(--sans);color:var(--ink-3)}
+    .it .v.hi{background:var(--green);padding:1px 8px;border-radius:999px}
+    .it .v.hi small{color:var(--ink)}
     .it.none .nm,.it.none .v{color:var(--ink-3);font-weight:500}
 
-    .chartHead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
-    .legend{display:flex;gap:12px;font-size:12px;color:var(--ink-2)}
-    .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+    .legend{display:flex;gap:12px;font:500 12px var(--sans);color:var(--ink-2)}
+    .legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:5px;vertical-align:3px}
     .chart svg{width:100%;height:auto}
     .chart text{font-family:var(--sans)}
 
-    .fc{display:grid;grid-template-columns:1fr;gap:12px}
-    .fc .goal{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;margin-top:6px;font-size:14.5px}
-    .fc .lg.s{font-size:14px;padding:2px 8px}
-    .fc .lg.off{background:var(--soft);color:var(--ink-3)}
-    @media (min-width:480px){.fc{grid-template-columns:1fr 1fr}.fc>div+div{border-left:1px solid var(--line);padding-left:14px}}
+    .fc{display:grid;grid-template-columns:1fr;gap:18px}
+    .fc .projRow{display:flex;align-items:flex-end;gap:14px;margin-top:8px}
+    .fc .projRow .big{font-size:52px}
+    .fc .projRow .lg{font-size:40px}
+    .fc .goal{display:grid;grid-template-columns:auto 1fr;gap:10px 12px;align-items:center;margin-top:10px;font-size:14px;line-height:1.4}
+    .fc .lg.s{font:800 13px var(--grot);color:var(--ink);border:1.5px solid var(--rule);border-radius:999px;padding:3px 10px;line-height:1.2;text-align:center}
+    .fc .lg.off{border-color:var(--hair);color:var(--ink-3)}
+    .fc .goal b{font:800 14px var(--grot)}
+    @media (min-width:480px){.fc{grid-template-columns:1fr 1fr}.fc>div+div{border-left:1px solid var(--hair);padding-left:16px}}
+    .note{font:500 12.5px var(--sans);color:var(--ink-2);margin-top:8px;line-height:1.55}
 
-    .foot{color:var(--ink-3);font-size:12.5px;text-align:center;margin-top:18px;line-height:1.6}
-    .foot a{color:var(--accent);text-decoration:none;font-weight:600}
-    .scaleNote{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:8px;line-height:1.7}
-    @media (max-width:360px){.big{font-size:34.5px}.cat b{font-size:15px}}
+    .foot{color:var(--ink-2);font-size:12.5px;text-align:center;margin-top:28px;line-height:1.7}
+    .foot a{color:var(--ink);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+    .scaleNote{font:500 11.5px var(--sans);letter-spacing:.04em;color:var(--ink-3);margin-top:12px;line-height:1.7}
+    @media (max-width:370px){.wordmark .a{font-size:64px}.wordmark .b{font-size:66px}.big{font-size:70px}.lg{font-size:50px}}
     @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
   </style>
 </head>
@@ -125,13 +146,31 @@
   <!-- ═══ CODE SCREEN ═══ -->
   <div id="screenCode">
     <div class="codeCard">
-      <div class="bigIc"><svg viewBox="0 0 16 16"><rect x="1" y="9" width="3" height="6" rx="1" fill="#3840f3"/><rect x="6.5" y="5" width="3" height="10" rx="1" fill="#3840f3"/><rect x="12" y="1" width="3" height="14" rx="1" fill="#3840f3"/></svg></div>
-      <h1>GRADE PORTAL</h1>
+      <div class="metaBar"><span>AELTS · KHU</span><span data-t="metaR"></span></div>
+      <h1 class="wordmark"><span class="a">Grade</span><span class="b">Portal</span></h1>
       <p class="sub" data-t="sub"></p>
-      <div class="seg" role="group" aria-label="Language">
+      <svg class="art" viewBox="0 0 338 132" aria-hidden="true">
+        <circle cx="198" cy="66" r="62" fill="#22ff5e"/>
+        <rect x="150" y="70" width="18" height="56" rx="5" fill="#111"/>
+        <rect x="172" y="48" width="18" height="78" rx="5" fill="#111"/>
+        <rect x="194" y="28" width="18" height="98" rx="5" fill="#2443ee"/>
+        <circle cx="199" cy="44" r="3.2" fill="#fff"/><circle cx="208" cy="44" r="3.2" fill="#fff"/>
+        <circle cx="177" cy="64" r="3" fill="#fff"/><circle cx="185" cy="64" r="3" fill="#fff"/>
+        <circle cx="155" cy="86" r="3" fill="#fff"/><circle cx="163" cy="86" r="3" fill="#fff"/>
+        <path d="M70 84c0-17 13-28 30-28s30 11 30 28v42H70z" fill="#111"/>
+        <rect x="84" y="94" width="32" height="22" rx="3" fill="#fff"/>
+        <path d="M90 105l5 5 11-11" stroke="#2443ee" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="92" cy="74" r="3.6" fill="#fff"/><circle cx="108" cy="74" r="3.6" fill="#fff"/>
+        <path d="M238 92c0-9 7-15 16-15h14c9 0 16 6 16 15v12c0 9-7 15-16 15h-9l-9 8v-8c-7-2-12-8-12-15z" fill="#111"/>
+        <text x="261" y="106" font-family="Fraunces,Georgia,serif" font-weight="600" font-size="17" fill="#fff" text-anchor="middle">A+</text>
+        <circle cx="292" cy="80" r="2.6" fill="#9a9a9a"/><circle cx="298" cy="73" r="1.7" fill="#9a9a9a"/>
+      </svg>
+      <div class="rule"></div>
+      <div class="langRow"><div class="seg" role="group" aria-label="Language">
         <button type="button" data-lang="ko">한국어</button>
         <button type="button" data-lang="en">English</button>
-      </div>
+      </div></div>
+      <label class="fieldLabel" for="codeInput" data-t="codeLabel"></label>
       <input class="codeInput" id="codeInput" type="text" maxlength="8" autocomplete="off" autocapitalize="characters" spellcheck="false">
       <button class="btn" id="goBtn" type="button"></button>
       <div id="errorMsg" class="err hidden"></div>
@@ -150,7 +189,7 @@
   // ═══════════════════════════════════════
   var I18N = {
     ko: {
-      sub: '접속 코드를 입력하십시오', go: '성적 확인', help: '코드는 이메일로 발송되었습니다.<br>분실 시 담당 교수에게 문의하십시오.',
+      sub: 'Intro to English Linguistics · 성적 확인', metaR: 'Grades', codeLabel: '접속 코드', top: '상위', hCats: '항목별 <em>점수</em>', hDist: '반 <em>분포</em>', hProg: '점수 <em>추이</em>', hFc: '이대로 <em>가면</em>', hGoal: '목표 <em>학점</em>', hFinal: '최종 <em>성적</em>', curGrade: '현재 등급', logout: '다른 코드', go: '성적 확인', help: '코드는 이메일로 발송되었습니다.<br>분실 시 담당 교수에게 문의하십시오.',
       errEmpty: '접속 코드를 입력하십시오.', errNotFound: '일치하는 코드가 없습니다. 코드를 확인한 후 다시 시도하십시오.', errGeneric: '오류가 발생했습니다. 잠시 후 다시 시도하십시오.', errRead: '성적을 읽는 중 오류가 발생했습니다. 담당 교수에게 문의하십시오.', errBusy: '시도가 너무 많습니다. 몇 분 후 다시 시도하십시오.', wait: '성적을 불러오는 중입니다. 잠시만 기다려 주십시오.',
       updated: '업데이트', total: '현재 총점', reflected: '반영', classAvg: '반 평균', noScore: '미공개', notYet: '아직 점수가 없습니다',
       dist: '점수 분포', students: '명', you: '나', progress: '진행 추이', me: '나', cls: '반 평균',
@@ -160,7 +199,7 @@
       cats: { ATTP: '출석·참여', WA: '과제', GP: '조별 과제', MID: '중간고사', FE: '기말고사', ATT: '출석', ME: '중간고사', FP: '기말 프로젝트' }
     },
     en: {
-      sub: 'Enter your access code', go: 'View grades', help: 'Your code was sent by email.<br>If you lost it, contact the professor.',
+      sub: 'Intro to English Linguistics · Grades', metaR: 'Grades', codeLabel: 'Access code', top: 'Top', hCats: 'Score <em>breakdown</em>', hDist: 'Class <em>distribution</em>', hProg: 'Your <em>progress</em>', hFc: 'At this <em>pace</em>', hGoal: 'To <em>reach</em>', hFinal: 'Final <em>grade</em>', curGrade: 'Current grade', logout: 'Other code', go: 'View grades', help: 'Your code was sent by email.<br>If you lost it, contact the professor.',
       errEmpty: 'Please enter an access code.', errNotFound: 'No matching record found. Check your access code and try again.', errGeneric: 'Something went wrong. Please try again.', errRead: 'Error reading grades. Please contact the professor.', errBusy: 'Too many attempts. Please try again in a few minutes.', wait: 'Loading your grades. This can take a few seconds.',
       updated: 'Updated', total: 'Current total', reflected: 'graded', classAvg: 'Class avg', noScore: 'Not yet', notYet: 'No scores yet',
       dist: 'Score distribution', students: ' students', you: 'You', progress: 'Progress', me: 'Me', cls: 'Class avg',
@@ -189,7 +228,7 @@
     FE:   '<svg viewBox="0 0 24 24"><circle cx="12" cy="14" r="5"/><path d="M9 3l3 6 3-6"/></svg>',
     FP:   '<svg viewBox="0 0 24 24"><circle cx="12" cy="14" r="5"/><path d="M9 3l3 6 3-6"/></svg>'
   };
-  var LOGO = '<span class="logo"><span class="ic"><svg viewBox="0 0 16 16"><rect x="1" y="9" width="3" height="6" rx="1" fill="#3840f3"/><rect x="6.5" y="5" width="3" height="10" rx="1" fill="#3840f3"/><rect x="12" y="1" width="3" height="14" rx="1" fill="#3840f3"/></svg></span><b>GRADE PORTAL</b></span>';
+  var LOGO = '<span class="logo"><b>Grade</b><i>Portal</i></span>';
 
   // ═══════════════════════════════════════
   // CODE SCREEN
@@ -205,7 +244,7 @@
     var els = document.querySelectorAll('[data-t]');
     for (var i = 0; i < els.length; i++) els[i].innerHTML = t(els[i].getAttribute('data-t'));
     document.getElementById('goBtn').textContent = t('go');
-    document.getElementById('codeInput').placeholder = LANG === 'ko' ? '접속 코드' : 'ACCESS CODE';
+    document.getElementById('codeInput').placeholder = LANG === 'ko' ? '이메일로 받은 코드' : 'Code from your email';
     var bs = document.querySelectorAll('.seg button');
     for (var j = 0; j < bs.length; j++) bs[j].classList.toggle('on', bs[j].getAttribute('data-lang') === LANG);
     if (lastData) renderResults(lastData);
@@ -393,34 +432,39 @@
     var remainW = Math.max(0, 100 - releasedW);
 
     // ── header ──
-    h += '<div class="top">' + LOGO + '<div class="r2"><div class="meta">';
-    if (data.lastUpdated) h += t('updated') + ' ' + esc(fmtDate(data.lastUpdated));
-    h += '</div><span class="seg mini" role="group" aria-label="Language"><button type="button" class="' + (LANG === 'ko' ? 'on' : '') + '" onclick="setLang(\'ko\')">KO</button><button type="button" class="' + (LANG === 'en' ? 'on' : '') + '" onclick="setLang(\'en\')">EN</button></span></div></div>';
+    h += '<div class="top">' + LOGO + '<div class="r2"><span class="seg mini" role="group" aria-label="Language"><button type="button" class="' + (LANG === 'ko' ? 'on' : '') + '" onclick="setLang(\'ko\')">KO</button><button type="button" class="' + (LANG === 'en' ? 'on' : '') + '" onclick="setLang(\'en\')">EN</button></span></div></div>';
+    h += '<div class="metaBar"><span>' + esc(data.courseName || '') + '</span><span>' + (data.lastUpdated ? t('updated') + ' ' + esc(fmtDate(data.lastUpdated)) : '') + '</span></div>';
 
     // ── summary ──
-    h += '<div class="mc"><div class="sumHead"><div><div class="nm">' + esc(data.studentName || '') + '</div><div class="cs">' + esc(data.courseName) + '</div></div><span class="cd">' + esc(data.code || '') + '</span></div>';
-    h += '<div class="summary"><div><div class="eyebrow">' + t('total') + (tW > 0 && tW < 100 ? ' · ' + t('reflected') + ' ' + tW + '%' : '') + '</div>';
-    if (current !== null) h += '<div class="big num">' + current.toFixed(1) + '<span style="font-size:16px;color:var(--ink-3);font-weight:600"> / 100</span></div>';
-    else h += '<div class="muted" style="margin-top:6px">' + t('notYet') + '</div>';
-    h += '</div><div class="r">';
-    if (current !== null) h += '<span class="lg">' + letter(current) + '</span>';
-    if (data.classAvg !== null && data.classAvg !== undefined) h += '<div class="muted" style="margin-top:6px">' + t('classAvg') + ' <span class="num">' + Number(data.classAvg).toFixed(1) + '</span></div>';
-    h += '</div></div></div>';
+    h += '<div class="who"><div><div class="nm">' + esc(data.studentName || '') + '</div></div><div class="cd">CODE<b>' + esc(data.code || '') + '</b></div></div>';
+    h += '<div class="rule"></div>';
+    if (current !== null) {
+      h += '<div class="total"><div><div class="eyebrow" style="margin-bottom:10px">' + t('total') + (tW > 0 && tW < 100 ? ' · ' + t('reflected') + ' ' + tW + '%' : '') + '</div><div class="big num">' + current.toFixed(1) + '<small>/100</small></div></div>';
+      h += '<div class="grade"><div class="lg">' + letter(current) + '</div><div class="eyebrow">' + t('curGrade') + '</div></div></div>';
+      var chips = '';
+      if (data.classAvg !== null && data.classAvg !== undefined) chips += '<div class="chip">' + t('classAvg') + '<b class="num">' + Number(data.classAvg).toFixed(1) + '</b></div>';
+      if (data.distribution && data.distribution.length >= 3) {
+        var above = 0; for (var di = 0; di < data.distribution.length; di++) if (data.distribution[di] > current + 1e-9) above++;
+        var topPct = Math.max(1, Math.ceil((above + 1) / data.distribution.length * 100));
+        chips += '<div class="chip g">' + t('top') + '<b class="num">' + topPct + '%</b></div>';
+      }
+      if (chips) h += '<div class="chips">' + chips + '</div>';
+    } else {
+      h += '<div class="total"><div class="notYet">' + t('notYet') + '</div></div>';
+    }
 
     // ── categories (accordion) ──
-    h += '<div class="mc" style="padding:2px 16px">';
+    h += '<div class="sec cats"><div class="secHead"><h3>' + t('hCats') + '</h3><span class="eyebrow">Weighted</span></div>';
     for (var k = 0; k < cats.length; k++) {
       var s = cats[k], cc = s.c, pfx = String(cc.prefix).toUpperCase();
       var hasItems = cc.items.length > 0;
       var dim = !s.any;
+      var pct = (s.any && s.maxRel > 0) ? Math.max(0, Math.min(100, s.earned / s.maxRel * 100)) : 0;
       h += '<div class="cat' + (dim ? ' dim' : '') + '" id="cat-' + k + '"' + (hasItems && !dim ? ' onclick="toggleCat(' + k + ')" role="button" tabindex="0" aria-expanded="false"' : '') + '>';
-      h += '<div class="l"><span class="catIc">' + (ICONS[pfx] || ICONS.WA) + '</span><b>' + esc(catName(pfx, cc.name)) + '</b><span class="pfx">' + esc(pfx) + ' · ' + cc.weight + '%</span></div>';
-      if (s.any) {
-        h += '<div class="row"><span class="sc num">' + fmt(s.earned) + '<small>/' + fmt(s.maxRel) + '</small></span>' + (hasItems ? '<span class="chev">&#9656;</span>' : '') + '</div>';
-      } else {
-        h += '<span class="muted">' + t('noScore') + '</span>';
-      }
-      h += '</div>';
+      h += '<div class="r"><div class="n">' + esc(catName(pfx, cc.name)) + '<span class="pfx">' + esc(pfx) + ' ' + cc.weight + '%</span></div>';
+      if (s.any) h += '<div class="sc num">' + fmt(s.earned) + '<small>/' + fmt(s.maxRel) + '</small>' + (hasItems ? '<span class="chev">&#9656;</span>' : '') + '</div>';
+      else h += '<div class="sc">' + t('noScore') + '</div>';
+      h += '</div><div class="bar"><b style="width:' + pct.toFixed(1) + '%"></b></div></div>';
       if (hasItems && !dim) {
         h += '<div class="items" id="items-' + k + '">';
         for (var m = 0; m < cc.items.length; m++) {
@@ -438,43 +482,43 @@
 
     // ── histogram ──
     if (data.distribution && data.distribution.length >= 3 && current !== null) {
-      h += '<div class="mc chart"><div class="chartHead"><span class="eyebrow">' + t('dist') + ' · n = ' + data.distribution.length + '</span>';
-      if (data.classAvg !== null && data.classAvg !== undefined) h += '<span class="muted">' + t('classAvg') + ' <span class="num">' + Number(data.classAvg).toFixed(1) + '</span></span>';
-      h += '</div>' + buildHistogram(data.distribution, current) + '</div>';
+      h += '<div class="sec chart"><div class="secHead"><h3>' + t('hDist') + '</h3><span class="eyebrow">n = ' + data.distribution.length + '</span></div>';
+      h += buildHistogram(data.distribution, current) + '</div>';
     }
 
     // ── progress ──
     if (data.progress && data.progress.length >= 2) {
-      h += '<div class="mc chart"><div class="chartHead"><span class="eyebrow">' + t('progress') + '</span><span class="legend"><span><i style="background:var(--accent)"></i>' + t('me') + '</span>';
+      h += '<div class="sec chart"><div class="secHead"><h3>' + t('hProg') + '</h3><span class="legend"><span><i style="background:var(--blue)"></i>' + t('me') + '</span>';
       if (data.progress[0].classGrade !== undefined) h += '<span><i style="background:var(--ink-3)"></i>' + t('cls') + '</span>';
       h += '</span></div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch">' + buildProgress(data.progress) + '</div></div>';
     }
 
     // ── forecast ──
     if (current !== null) {
-      h += '<div class="mc fc">';
+      h += '<div class="sec fc">';
       if (remainW > 0.05) {
         var proj = fixedPts + remainW * current / 100;
-        h += '<div><div class="eyebrow">' + t('forecast') + '</div><div class="row" style="gap:10px;margin-top:6px"><span class="big num" style="font-size:34px">' + proj.toFixed(1) + '</span><span class="lg">' + letter(proj) + '</span></div><div class="muted" style="margin-top:6px">' + t('forecastNote') + '</div></div>';
+        h += '<div><div class="secHead" style="margin-bottom:0"><h3>' + t('hFc') + '</h3></div><div class="projRow"><span class="big num">' + proj.toFixed(1) + '</span><span class="lg">' + letter(proj) + '</span></div><div class="note">' + t('forecastNote') + '</div></div>';
         // goals: up to two grades above projected
         var cur = letter(proj), idx = -1;
         for (var q = 0; q < CUTS.length; q++) if (CUTS[q][0] === cur) idx = q;
         var goals = [];
         for (var g = (idx === -1 ? CUTS.length - 1 : idx - 1); g >= 0 && goals.length < 2; g--) goals.push(CUTS[g]);
         if (goals.length) {
-          h += '<div><div class="eyebrow">' + t('goal') + '</div><div class="goal">';
+          h += '<div><div class="secHead" style="margin-bottom:0"><h3>' + t('hGoal') + '</h3></div><div class="goal">';
           for (var gi = 0; gi < goals.length; gi++) {
             var need = (goals[gi][1] - fixedPts) / remainW * 100;
             var ok = need <= 100.0001;
-            h += '<span class="lg s' + (ok ? '' : ' off') + '">' + goals[gi][0] + '</span><span class="muted">' + t('remainAvg') + '</span>';
-            h += ok ? '<b class="num">' + Math.max(0, Math.ceil(need)) + t('atLeast') + '</b>' : '<span class="muted">' + t('unreachable') + '</span>';
+            h += '<span class="lg s' + (ok ? '' : ' off') + '">' + goals[gi][0] + '</span><span class="gtxt">';
+            h += ok ? '<span class="muted">' + t('remainAvg') + '</span> <b class="num">' + Math.max(0, Math.ceil(need)) + t('atLeast') + '</b>' : '<span class="muted">' + t('unreachable') + '</span>';
+            h += '</span>';
           }
           h += '</div></div>';
         } else {
-          h += '<div><div class="eyebrow">' + t('goal') + '</div><div class="muted" style="margin-top:6px">' + t('topGrade') + '</div></div>';
+          h += '<div><div class="secHead" style="margin-bottom:0"><h3>' + t('hGoal') + '</h3></div><div class="note">' + t('topGrade') + '</div></div>';
         }
       } else {
-        h += '<div><div class="eyebrow">' + t('final') + '</div><div class="row" style="gap:10px;margin-top:6px"><span class="big num" style="font-size:34px">' + current.toFixed(1) + '</span><span class="lg">' + letter(current) + '</span></div><div class="muted" style="margin-top:6px">' + t('finalNote') + '</div></div>';
+        h += '<div><div class="secHead" style="margin-bottom:0"><h3>' + t('hFinal') + '</h3></div><div class="projRow"><span class="big num">' + current.toFixed(1) + '</span><span class="lg">' + letter(current) + '</span></div><div class="note">' + t('finalNote') + '</div></div>';
       }
       h += '</div>';
       h += '<div class="scaleNote">A+ 97 · A0 94 · A- 90 · B+ 87 · B0 84 · B- 80 · C+ 77 · C0 74 · C- 70 · D+ 67 · D0 64 · D- 60</div>';
@@ -497,30 +541,31 @@
   // CHARTS (style A: rounded bars + KDE, lime "You")
   // ═══════════════════════════════════════
   function buildHistogram(grades, my) {
-    var W = 460, H = 170, pL = 30, pR = 14, pT = 26, pB = 26;
+    var W = 460, H = 160, pL = 8, pR = 8, pT = 28, pB = 24;
     var cW = W - pL - pR, cH = H - pT - pB;
-    var dMin = Math.min.apply(null, grades), dMax = Math.max.apply(null, grades);
-        var cap = dMax > 100 ? Math.ceil(dMax / 5) * 5 + 5 : 100, rMin = Math.max(0, Math.floor(dMin / 10) * 10 - 5), rMax = Math.min(cap, Math.ceil(dMax / 10) * 10 + 5);
-        if (rMax - rMin < 30) { rMin = Math.max(0, rMin - 10); rMax = Math.min(cap, rMax + 10); }
+    var dMin = Math.min.apply(null, grades.concat([my])), dMax = Math.max.apply(null, grades.concat([my]));
+    var cap = dMax > 100 ? Math.ceil(dMax / 5) * 5 + 5 : 100, rMin = Math.max(0, Math.floor(dMin / 10) * 10 - 5), rMax = Math.min(cap, Math.ceil(dMax / 10) * 10 + 5);
+    if (rMax - rMin < 30) { rMin = Math.max(0, rMin - 10); rMax = Math.min(cap, rMax + 10); }
     var span = rMax - rMin;
-    var nB = Math.max(5, Math.min(14, Math.round(Math.sqrt(grades.length) * 1.5)));
+    var nB = Math.max(5, Math.min(12, Math.round(Math.sqrt(grades.length) * 1.5)));
     var bins = []; for (var b = 0; b < nB; b++) bins.push(0);
-    for (var i = 0; i < grades.length; i++) { var idx = Math.floor((grades[i] - rMin) / (span / nB)); if (idx >= nB) idx = nB - 1; if (idx < 0) idx = 0; bins[idx]++; }
-    var maxBin = Math.max.apply(null, bins);
-    var bw = Math.max(span * 0.08, 3), kp = 80, kde = [], maxK = 0;
-    for (var k = 0; k <= kp; k++) { var x = rMin + span * k / kp, d = 0; for (var g = 0; g < grades.length; g++) { var z = (x - grades[g]) / bw; d += Math.exp(-0.5 * z * z); } kde.push({ x: x, d: d }); if (d > maxK) maxK = d; }
+    function binOf(v) { var i = Math.floor((v - rMin) / (span / nB)); return Math.max(0, Math.min(nB - 1, i)); }
+    for (var i = 0; i < grades.length; i++) bins[binOf(grades[i])]++;
+    var myBin = binOf(my), maxBin = Math.max.apply(null, bins.concat([1]));
     var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
-    for (var gl = 1; gl <= 3; gl++) { var gy = pT + cH - cH * gl / 4; s += '<line x1="' + pL + '" y1="' + gy + '" x2="' + (W - pR) + '" y2="' + gy + '" stroke="#e3e3ee" stroke-dasharray="2 3"/>'; }
-    var slot = cW / nB, gap = 3;
-    for (var b2 = 0; b2 < nB; b2++) { if (!bins[b2]) continue; var bh = bins[b2] / maxBin * cH * 0.88; s += '<rect x="' + (pL + b2 * slot + gap / 2) + '" y="' + (pT + cH - bh) + '" width="' + (slot - gap) + '" height="' + bh + '" rx="3" fill="#aeb2ff"/>'; }
-    if (maxK > 0) { var pts = []; for (var k2 = 0; k2 <= kp; k2++) pts.push((pL + (kde[k2].x - rMin) / span * cW).toFixed(1) + ',' + (pT + cH - kde[k2].d / maxK * cH * 0.88).toFixed(1)); s += '<polyline points="' + pts.join(' ') + '" fill="none" stroke="#3840f3" stroke-width="2" stroke-linejoin="round"/>'; }
-    var mx = Math.max(pL + 4, Math.min(pL + cW - 4, pL + (my - rMin) / span * cW));
-    s += '<line x1="' + mx + '" y1="' + (pT - 4) + '" x2="' + mx + '" y2="' + (pT + cH) + '" stroke="#c8f53a" stroke-width="3"/>';
-    var lbl = t('you') + ' ' + my.toFixed(1), lw = lbl.length * 7.5 + 12, lx = mx + 5; if (lx + lw > W - pR) lx = mx - lw - 5;
-    s += '<rect x="' + lx + '" y="' + (pT - 13) + '" width="' + lw + '" height="18" rx="4" fill="#c8f53a"/><text x="' + (lx + 6) + '" y="' + (pT) + '" font-size="11.5" font-weight="700" fill="#1a1a2e">' + escSvg(lbl) + '</text>';
-    s += '<line x1="' + pL + '" y1="' + (pT + cH) + '" x2="' + (W - pR) + '" y2="' + (pT + cH) + '" stroke="#e3e3ee"/>';
-    for (var l = 0; l <= 5; l++) s += '<text x="' + (pL + cW * l / 5) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="11.5" fill="#8a8aa3">' + Math.round(rMin + span * l / 5) + '</text>';
-    s += '<text x="' + (pL - 6) + '" y="' + (pT + cH * 0.12 + 4) + '" text-anchor="end" font-size="10.5" fill="#8a8aa3">' + maxBin + '</text>';
+    var slot = cW / nB, gap = 6;
+    for (var b2 = 0; b2 < nB; b2++) {
+      var bh = bins[b2] ? Math.max(6, bins[b2] / maxBin * cH) : 0;
+      if (b2 === myBin && !bh) bh = 6;
+      if (!bh) continue;
+      s += '<rect x="' + (pL + b2 * slot + gap / 2) + '" y="' + (pT + cH - bh) + '" width="' + (slot - gap) + '" height="' + bh + '" rx="3" fill="' + (b2 === myBin ? '#2443ee' : '#111111') + '"/>';
+    }
+    var mh = Math.max(6, bins[myBin] / maxBin * cH), cx = pL + myBin * slot + slot / 2;
+    var lbl = t('you') + ' ' + my.toFixed(1), lw = lbl.length * 7 + 18;
+    var lx = Math.max(pL, Math.min(W - pR - lw, cx - lw / 2)), ly = pT + cH - mh - 26;
+    s += '<rect x="' + lx + '" y="' + ly + '" width="' + lw + '" height="20" rx="10" fill="#22ff5e"/><text x="' + (lx + lw / 2) + '" y="' + (ly + 14) + '" text-anchor="middle" font-size="11.5" font-weight="700" fill="#111111">' + escSvg(lbl) + '</text>';
+    s += '<line x1="' + pL + '" y1="' + (pT + cH + 1) + '" x2="' + (W - pR) + '" y2="' + (pT + cH + 1) + '" stroke="#111111" stroke-width="2"/>';
+    for (var l = 0; l <= 4; l++) s += '<text x="' + (pL + cW * l / 4) + '" y="' + (H - 6) + '" text-anchor="' + (l === 0 ? 'start' : (l === 4 ? 'end' : 'middle')) + '" font-size="11" fill="#9a9a9a">' + Math.round(rMin + span * l / 4) + '</text>';
     return s + '</svg>';
   }
 
@@ -533,16 +578,16 @@
     function X(i) { return pL + cW * i / Math.max(1, n - 1); }
     function Y(v) { return pT + cH - cH * (v - rMin) / (rMax - rMin); }
     var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="' + (n > 7 ? 'min-width:' + Math.min(W, 560) + 'px' : '') + '">';
-    for (var gl = 0; gl <= 3; gl++) { var gv = rMin + (rMax - rMin) * gl / 3, gy = Y(gv); s += '<line x1="' + pL + '" y1="' + gy + '" x2="' + (W - pR) + '" y2="' + gy + '" stroke="#e3e3ee" stroke-dasharray="2 3"/><text x="' + (pL - 6) + '" y="' + (gy + 3) + '" text-anchor="end" font-size="10.5" fill="#8a8aa3">' + Math.round(gv) + '</text>'; }
-    if (points[0].classGrade !== undefined) { var cp = []; for (var c = 0; c < n; c++) if (points[c].classGrade !== null) cp.push(X(c).toFixed(1) + ',' + Y(points[c].classGrade).toFixed(1)); s += '<polyline points="' + cp.join(' ') + '" fill="none" stroke="#8a8aa3" stroke-width="1.4" stroke-dasharray="3 3"/>'; }
+    for (var gl = 0; gl <= 3; gl++) { var gv = rMin + (rMax - rMin) * gl / 3, gy = Y(gv); s += '<line x1="' + pL + '" y1="' + gy + '" x2="' + (W - pR) + '" y2="' + gy + '" stroke="#e6e6e6"/><text x="' + (pL - 6) + '" y="' + (gy + 3) + '" text-anchor="end" font-size="10.5" fill="#9a9a9a">' + Math.round(gv) + '</text>'; }
+    if (points[0].classGrade !== undefined) { var cp = []; for (var c = 0; c < n; c++) if (points[c].classGrade !== null) cp.push(X(c).toFixed(1) + ',' + Y(points[c].classGrade).toFixed(1)); s += '<polyline points="' + cp.join(' ') + '" fill="none" stroke="#9a9a9a" stroke-width="1.5" stroke-dasharray="3 3"/>'; }
     var pp = []; for (var p = 0; p < n; p++) pp.push(X(p).toFixed(1) + ',' + Y(points[p].grade).toFixed(1));
-    s += '<polyline points="' + pp.join(' ') + '" fill="none" stroke="#3840f3" stroke-width="2.2" stroke-linejoin="round"/>';
+    s += '<polyline points="' + pp.join(' ') + '" fill="none" stroke="#2443ee" stroke-width="2.6" stroke-linejoin="round"/>';
     for (var d = 0; d < n; d++) {
       var last = d === n - 1;
-      s += '<circle cx="' + X(d) + '" cy="' + Y(points[d].grade) + '" r="' + (last ? 5 : 3) + '" fill="' + (last ? '#c8f53a' : '#3840f3') + '" stroke="' + (last ? '#1a1a2e' : '#fff') + '" stroke-width="' + (last ? 1.5 : 1.5) + '"/>';
-      if (last) s += '<text x="' + X(d) + '" y="' + (Y(points[d].grade) - 10) + '" text-anchor="' + (d === n - 1 ? 'end' : 'middle') + '" font-size="11.5" font-weight="700" fill="#1a1a2e">' + points[d].grade.toFixed(1) + '</text>';
+      s += '<circle cx="' + X(d) + '" cy="' + Y(points[d].grade) + '" r="' + (last ? 6 : 3.2) + '" fill="' + (last ? '#22ff5e' : '#2443ee') + '" stroke="' + (last ? '#111111' : '#fff') + '" stroke-width="' + (last ? 1.5 : 1.5) + '"/>';
+      if (last) s += '<text x="' + X(d) + '" y="' + (Y(points[d].grade) - 10) + '" text-anchor="' + (d === n - 1 ? 'end' : 'middle') + '" font-size="11.5" font-weight="700" fill="#111111">' + points[d].grade.toFixed(1) + '</text>';
       var lb = itemName(points[d].label); if (lb.length > 7) lb = lb.substring(0, 6) + '…';
-            s += '<text x="' + X(d) + '" y="' + (H - 8) + '" text-anchor="' + (n > 1 && d === 0 ? 'start' : (last ? 'end' : 'middle')) + '" font-size="10.5" fill="#8a8aa3">' + escSvg(lb) + '</text>';
+            s += '<text x="' + X(d) + '" y="' + (H - 8) + '" text-anchor="' + (n > 1 && d === 0 ? 'start' : (last ? 'end' : 'middle')) + '" font-size="10.5" fill="#9a9a9a">' + escSvg(lb) + '</text>';
     }
     return s + '</svg>';
   }
