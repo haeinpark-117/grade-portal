@@ -26,17 +26,19 @@ h1 em{font:600 34px var(--serif);color:var(--blue);font-style:normal}
 .sub{color:var(--ink2);margin-top:6px;font-size:14px}
 
 /* score card */
-.ask{margin-top:22px;border:2px solid var(--ink);border-radius:18px;padding:16px 18px 14px;transition:box-shadow .3s var(--ease)}
+.ask{margin-top:14px;border:2px solid var(--ink);border-radius:18px;padding:16px 18px 14px;transition:box-shadow .3s var(--ease)}
 .ask.live{box-shadow:6px 6px 0 var(--green)}
 .ask label{display:block;font:700 12px var(--grot);letter-spacing:.06em;color:var(--ink3)}
 .row{display:flex;gap:8px;align-items:flex-end;margin-top:4px}
 .row input{width:150px;font:900 46px/1 var(--grot);letter-spacing:-.03em;border:0;border-bottom:2px solid var(--ink);padding:2px 0;outline:none;background:transparent;color:var(--ink)}
 .row input::placeholder{color:#d6d6d6}
 .row .of{font:600 18px var(--sans);color:var(--ink3);padding-bottom:6px}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:30px}
+.chips{display:flex;gap:6px;margin-left:auto;align-self:center}
 .chip{border-radius:999px;padding:4px 12px;font:700 14px var(--grot);white-space:nowrap;opacity:0;transform:translateY(6px);transition:opacity .35s var(--ease),transform .35s var(--ease)}
 .live .chip{opacity:1;transform:none}
-.slider{margin-top:16px;position:relative}
+.slider{margin:-4px calc(1.786% - 13px) 0;position:relative}
+.cap{margin:4px 0 0!important;font-size:12.5px!important}
+#plot{margin-top:14px;cursor:ew-resize}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;cursor:pointer;touch-action:pan-y}
 input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--blue) var(--p,0%),#e9e9e9 var(--p,0%))}
 input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:#e9e9e9}
@@ -48,12 +50,12 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15)}
 .hint{font-size:12.5px;color:var(--ink3);margin-top:8px}
 
 /* tabs */
-.tabs{position:relative;display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;padding:3px;margin:28px 0 12px}
+.tabs{position:relative;display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;padding:3px;margin:20px 0 0}
 .tabs .pill{position:absolute;top:3px;bottom:3px;left:3px;border-radius:999px;background:var(--ink);transition:transform .4s var(--ease),width .4s var(--ease)}
 .tabs button{position:relative;z-index:1;font:700 13px var(--grot);border:0;background:transparent;border-radius:999px;padding:6px 16px;cursor:pointer;color:var(--ink);transition:color .3s}
 .tabs button.on{color:#fff}
 
-.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--ink);border-bottom:1px solid var(--hair)}
+.stats{margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--ink);border-bottom:1px solid var(--hair)}
 .stats div{padding:12px 4px}
 .stats .k{font-size:12.5px;color:var(--ink3);font-weight:600}
 .stats .v{font:800 28px var(--grot);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
@@ -98,29 +100,26 @@ svg text{font-family:var(--sans)}
 <h1>Midterm <em>Results</em></h1>
 <p class="sub" data-t="sub"></p>
 
+<div class="tabs" id="tabs"><span class="pill" id="pill"></span><button class="on" data-k="all" data-t="all"></button><button data-k="00" data-t="s00"></button><button data-k="01" data-t="s01"></button></div>
+
 <div class="ask" id="ask">
   <label for="sc" data-t="ask"></label>
   <div class="row">
     <input id="sc" type="text" inputmode="decimal" autocomplete="off" placeholder="—" aria-describedby="hint">
     <span class="of">/ 30</span>
-    </div>
-  <div class="chips"><span class="chip" id="c2" style="background:var(--green)"></span></div>
-  <div class="slider"><input id="rg" type="range" min="0" max="32" step="0.1" value="24" aria-label="score"></div>
-  <div class="ticks"><span>0</span><span>8</span><span>16</span><span>24</span><span>32</span></div>
+    <div class="chips"><span class="chip" id="c2" style="background:var(--green)"></span></div>
+  </div>
+  <div id="plot"><div class="tip" id="tip"></div></div>
+  <div class="slider"><input id="rg" type="range" min="8" max="31" step="0.1" value="24" aria-label="score"></div>
+  <p class="why cap" data-t="w1"></p>
   <div class="hint" id="hint" data-t="hint"></div>
 </div>
-
-<div class="tabs" id="tabs"><span class="pill" id="pill"></span><button class="on" data-k="all" data-t="all"></button><button data-k="00" data-t="s00"></button><button data-k="01" data-t="s01"></button></div>
 
 <div class="stats">
   <div><div class="k" data-t="avg"></div><div class="v" id="avg"></div></div>
   <div><div class="k" data-t="med"></div><div class="v" id="med"></div></div>
   <div><div class="k" data-t="n"></div><div class="v" id="n"></div></div>
 </div>
-
-<h2 data-t="h1"></h2>
-<p class="why" data-t="w1"></p>
-<div id="plot"><div class="tip" id="tip"></div></div>
 
 <h2 data-t="h2"></h2>
 <p class="why" data-t="w2"></p>
@@ -135,18 +134,18 @@ var S01=[14.3,14.5,17.5,17.6,19.6,19.8,23,23,23,23.5,23.5,23.6,24,24,24.3,24.5,2
 var PTS=[];S00.forEach(function(v){PTS.push({v:v,s:'00'});});S01.forEach(function(v){PTS.push({v:v,s:'01'});});
 var T={
  ko:{sub:'중간고사 점수 = 시험 30점 + Extra credit (최대 2점)',ask:'내 중간고사 점수 (EC 포함)',
-  hint:'점수를 입력하거나 슬라이더를 움직여 보세요. Grade Portal의 Midterm 항목에서 Midterm과 ExtraCredit 점수를 더한 값입니다. 입력한 점수는 이 화면에만 표시되고 저장되지 않습니다.',
+  hint:'Grade Portal의 Midterm 항목에서 Midterm과 ExtraCredit 점수를 더해 입력하세요. 입력한 점수는 저장되지 않습니다.',
   all:'전체',s00:'00분반',s01:'01분반',avg:'평균',med:'30점 이상',n:'응시',unit:'명',
-  h1:'모든 점수를 <em>한눈에</em>',w1:'점 하나가 학생 한 명입니다. 점을 누르면 그 점수대 인원이 보입니다.',
+  h1:'모든 점수를 <em>한눈에</em>',w1:'점 하나가 학생 한 명입니다. 그래프나 슬라이더를 좌우로 끌어 점수를 옮겨 볼 수 있습니다.',
   h2:'점수 <em>구간</em>',w2:'30점 만점 기준 90%(27점) 이상 A, 80%(24점) 이상 B, 70%(21점) 이상 C로 나눈 참고용 구간이며 최종 학점과는 다릅니다. 파란 막대가 내가 속한 구간입니다.',
   top:function(s,p){return s+' 상위 '+p+'%';},diff:function(d){return '평균 '+d;},
   bands:['27점 이상','24 – 26.9','21 – 23.9','21점 미만'],me:'나',medl:'중앙값',
   col:function(c,n){return c+'점대 '+n+'명';},
   foot:'이 페이지에는 학생 이름이나 코드 없이 점수 목록만 들어 있습니다.'},
  en:{sub:'Midterm score = exam (30 pts) + extra credit (up to 2 pts)',ask:'My midterm score (incl. EC)',
-  hint:'Type your score or drag the slider. It is your Midterm plus ExtraCredit under Midterm in the Grade Portal. Nothing you enter is saved.',
+  hint:'Enter your Midterm plus ExtraCredit from the Grade Portal. Nothing you enter is saved.',
   all:'All',s00:'Section 00',s01:'Section 01',avg:'Mean',med:'30 or above',n:'Students',unit:'',
-  h1:'Every score <em>at a glance</em>',w1:'Each dot is one student. Tap a dot to see how many scored in that range.',
+  h1:'Every score <em>at a glance</em>',w1:'Each dot is one student. Drag across the chart or the slider to move your score.',
   h2:'Score <em>bands</em>',w2:'Bands for reference: A = 90% (27 pts) or above, B = 80% (24), C = 70% (21). These are not final course grades. The blue bar is your band.',
   top:function(s,p){return 'Top '+p+'% · '+s;},diff:function(d){return d+' vs. mean';},
   bands:['27 and above','24 – 26.9','21 – 23.9','Below 21'],me:'You',medl:'Median',
@@ -235,15 +234,13 @@ function layout(){
   window.__cols=cols;
 }
 
-// tap a dot column -> show count
-var tip=document.getElementById('tip'),tipTimer;
-svg.addEventListener('click',function(e){
-  var r=svg.getBoundingClientRect(),vx=(e.clientX-r.left)/r.width*W,v=LO+(vx-PL)/(W-PL-PR)*(HI-LO),k=Math.floor(v);
-  var n=cur().filter(function(x){return Math.floor(x)===k;}).length;if(k<LO||k>30)return;
-  colhl.setAttribute('x',X(k));colhl.style.opacity=1;
-  tip.textContent=t('col')(k,n);tip.style.left=(X(k+.5)/W*100)+'%';tip.style.top=((BASE-Math.max(n,1)*STEP)/H*r.height)+'px';tip.classList.add('on');
-  clearTimeout(tipTimer);tipTimer=setTimeout(function(){tip.classList.remove('on');colhl.style.opacity=0;},1800);
-});
+// drag across the chart -> move my score
+var tip=document.getElementById('tip'),drag=false;
+function setFromX(e){var r=svg.getBoundingClientRect(),vx=(e.clientX-r.left)/r.width*W,v=LO+(vx-PL)/(W-PL-PR)*(HI-LO);
+  v=Math.max(LO,Math.min(HI,Math.round(v*10)/10));ME=v;sc.value=f1(v);rg.value=v;setTrack();render();}
+svg.addEventListener('pointerdown',function(e){drag=true;try{svg.setPointerCapture(e.pointerId);}catch(_){}setFromX(e);});
+svg.addEventListener('pointermove',function(e){if(drag)setFromX(e);});
+svg.addEventListener('pointerup',function(){drag=false;});svg.addEventListener('pointercancel',function(){drag=false;});
 
 // ---------- bands ----------
 var bandsEl=document.getElementById('bands'),bandRows=B.map(function(){var d=document.createElement('div');d.className='band';
@@ -270,7 +267,7 @@ function render(){
 
 // ---------- inputs ----------
 var sc=document.getElementById('sc'),rg=document.getElementById('rg');
-function setTrack(){rg.style.setProperty('--p',(rg.value/32*100)+'%');}
+function setTrack(){rg.style.setProperty('--p',((rg.value-8)/23*100)+'%');}
 function fromText(){
   var v=sc.value.trim().replace(',','.'),n=parseFloat(v);
   if(v===''||isNaN(n)||n<0||n>32){ME=null;}else{ME=Math.round(n*10)/10;rg.value=ME;setTrack();}
